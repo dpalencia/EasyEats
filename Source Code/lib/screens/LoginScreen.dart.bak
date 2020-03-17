@@ -1,0 +1,116 @@
+import 'package:flutter/material.dart';
+
+// https://medium.com/flutterpub/flutter-how-to-do-user-login-with-firebase-a6af760b14d5
+
+class LoginScreen extends StatefulWidget {
+  @override 
+  State<StatefulWidget> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool _loading = false;
+  String _email;
+  String _password;
+  final Key _formKey = GlobalKey<FormState>();
+
+  @override 
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Log In")
+      ),
+      body: Stack(
+        children: <Widget>[
+          showLoginForm(),
+          showProgress()
+        ],
+      )
+    );
+  }
+
+  Widget showLoginForm() {
+    return Container(
+      child: Form(
+        key: _formKey, // Why do we need a key here?
+        // Pretty sure this is so the state of the 
+        // form is preserved every time this widget is built.
+        child: ListView(
+          children: <Widget>[
+            emailInput(),
+            passwordInput()
+          ]
+        )
+      )
+    );
+  }
+
+  Widget showProgress() {
+    // If loading, show the progress bar
+    if(_loading) {
+      return Center(
+        child: CircularProgressIndicator()
+      );
+    }
+    // Just an empty container
+    return Container(
+      height: 0,
+      width: 0
+    );
+  }
+
+  Widget emailInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      child: TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        decoration: new InputDecoration(
+          hintText: 'Email'
+        ),
+        validator: (v) => v.isEmpty ? 'Empty email' : null,
+        onSaved: (v) => _email = v.trim(),
+      )
+    );
+  }
+
+  Widget passwordInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      child: TextFormField(
+        maxLines: 1,
+        autofocus: false,
+        obscureText: true,
+        decoration: InputDecoration(
+          hintText: 'Password'
+        ),
+        validator: (v) => v.isEmpty ? 'Empty password' : null,
+        onSaved: (v) => _password = v.trim(),  
+      )
+    );
+  }
+
+  Widget loginButton() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        child: SizedBox(
+          height: 40.0,
+          child: RaisedButton(
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+                borderRadius:BorderRadius.circular(30.0)),
+            color: Colors.blue,
+            child: Text(
+                "Log In",
+                style: TextStyle(fontSize: 20.0, color: Colors.white)),
+            onPressed: _validate,
+          ),
+        ));
+  }
+
+
+}
+
+
+
+

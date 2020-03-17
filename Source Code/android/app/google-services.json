@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1088412326417",
+    "firebase_url": "https://odysseus-recipes.firebaseio.com",
+    "project_id": "odysseus-recipes",
+    "storage_bucket": "odysseus-recipes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088412326417:android:8eddf71dea99b0575d2fb0",
+        "android_client_info": {
+          "package_name": "com.example.odysseusrecipes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088412326417-iedn5juut822fsqfe1qaknrt6pfg6us3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKyVvodJu53glqQxBvufyJxEbGq0aEdEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088412326417-iedn5juut822fsqfe1qaknrt6pfg6us3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
