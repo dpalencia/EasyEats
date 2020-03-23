@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:odysseusrecipes/screens/LoginScreen.dart';
-//import 'package:odysseusrecipes/screens/IngredientsList.dart';
+import 'package:odysseusrecipes/screens/Root.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -22,13 +23,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: "Hello world"),
+      home: Root(FirebaseAuth.instance)
     );
   }
 }
 
 
-
+/*
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -113,3 +114,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/
