@@ -1,27 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:odysseusrecipes/functions/accountHelpers.dart';
+import 'package:odysseusrecipes/functions/UIHelpers.dart';
 
+import 'Root.dart';
 // https://medium.com/flutterpub/flutter-how-to-do-user-login-with-firebase-a6af760b14d5
 
 class LoginScreen extends StatefulWidget {
-  final FirebaseAuth _auth;
-
-  final loginCallBack;
-
-  LoginScreen(this._auth, this.loginCallBack);
-
+  final FirebaseAuth _auth; // Pass down the _auth object.
+  LoginScreen(this._auth);
   @override 
-  State<StatefulWidget> createState() => _LoginScreenState(this._auth);
+  State<StatefulWidget> createState() => LoginScreenState(this._auth);
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final FirebaseAuth _auth;
-  _LoginScreenState(this._auth);
-  
-  String _email;
-  String _password;  
-  bool _register = false;
+class LoginScreenState extends State<LoginScreen> { 
+  final FirebaseAuth _auth; // Pass down the _auth object.
+  LoginScreenState(this._auth);   
+  String _email; // User email. Maintained by state,
+  String _password; // User password. Maintained by state.
+  bool _register = false; // Keep track of whether to statefully show the log in or register screen
 
   final _formKey = GlobalKey<FormState>();
   final myController = TextEditingController();
@@ -45,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget showRegisterForm() {
     return Container(
+      margin: const EdgeInsets.all(20.0),
       child: Form(
         key: _formKey, // Why do we need a key here?
         // Pretty sure this is so the state of the 
@@ -63,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     Widget registerButton() {
     return Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 45.0),
         child: SizedBox(
           height: 40.0,
           child: RaisedButton(
@@ -80,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
+
   Widget returnToLogin() {
     return InkWell(
       onTap: () { 
@@ -92,26 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget showLoginForm(BuildContext context) {
-    return Container(
-      child: Form(
-        key: _formKey, // Why do we need a key here?
-        // Pretty sure this is so the state of the 
-        // form is preserved every time this widget is built.
-        child: ListView(
-          children: <Widget>[
-            emailInput(),
-            passwordInput(),
-            loginButton(),
-            newUser(context)
-          ]
-        )
-      )
-    );
-  }
-
-
-  Widget newUser(BuildContext context) {
+  Widget newUser() {
     return InkWell(
       onTap: () { 
         this.setState(() {
@@ -122,6 +103,26 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text("Create a new account")
     );
   }
+
+  Widget showLoginForm(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(20.0),
+      child: Form(
+        key: _formKey, // Why do we need a key here?
+        // This is so the state of the 
+        // form is preserved every time this widget is built.
+        child: ListView(
+          children: <Widget>[
+            emailInput(),
+            passwordInput(),
+            loginButton(context),
+            newUser()
+          ]
+        )
+      )
+    );
+  }
+
 
   Widget emailInput() {
     return Padding(
@@ -141,8 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget passwordInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
-      child: TextFormField(
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0), 
+      child: TextFormField( 
         maxLines: 1,
         autofocus: false,
         obscureText: true,
@@ -155,9 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget loginButton() {
+  Widget loginButton(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 45.0),
         child: SizedBox(
           height: 40.0,
           child: RaisedButton(
@@ -168,18 +169,21 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
                 "Log In",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: validate,
+            onPressed: () {
+              validate(context);
+            }),
           ),
-        ));
+        );
   }
 
-  void validate() async { 
-    if(_formKey.currentState.validate() == false) {
+  void validate(BuildContext context) async { 
+    if(_formKey.currentState.validate() == false) { // Validate the fields
       return;
     }
-    _formKey.currentState.save();
-    _auth.signInWithEmailAndPassword(email: _email, password: _password);
-    widget.loginCallBack();
+    _formKey.currentState.save(); // Save the fields
+    // API Log in
+    login(context.findAncestorStateOfType<RootState>(), _email, _password);
+    
   }
 
   void createAnAccount() async {
