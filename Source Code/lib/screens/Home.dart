@@ -4,15 +4,12 @@ import 'package:odysseusrecipes/screens/Root.dart';
 
 class Home extends StatelessWidget {
 
-  final logoutCallBack;
-
-  Home(this.logoutCallBack);
 
   @override build(BuildContext context) { 
     return Scaffold(
-        drawer: mainDrawer(context.findAncestorStateOfType<RootState>()),
+        drawer: mainDrawer(context), 
         backgroundColor: Colors.amber[400],
-        appBar: AppBar(
+        appBar: AppBar( 
           title: Text('Recipe App'),
           backgroundColor: Colors.redAccent[700],
         ),

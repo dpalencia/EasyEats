@@ -10,6 +10,7 @@ class IngredientsList extends StatelessWidget {
   // to the DB and update itself with live data.
   // The streambuilder will rebuild everything beneath,
   // any time the data changes.
+
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot> (
       // The firestore snapshots() function
@@ -21,7 +22,7 @@ class IngredientsList extends StatelessWidget {
         // ListView widget which will hold our list of ingredients.
         if(!snapshot.hasData) return LinearProgressIndicator();
         return _buildList(context, snapshot.data.documents); 
-      },
+      }
     );
   }
   

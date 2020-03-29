@@ -2,19 +2,31 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/screens/Root.dart';
-import 'package:odysseusrecipes/screens/LoginScreen.dart';
+import 'package:odysseusrecipes/screens/IngredientsList.dart';
+import 'package:odysseusrecipes/screens/Home.dart';
 
-Drawer mainDrawer(RootState rootState) {
-  return Drawer(
+Drawer mainDrawer(BuildContext context) {
+  return Drawer(   
     child: ListView(
       children: <Widget> [
       ListTile(
-        title: Text("Landing")
+        title: Text("Landing"),
+        onTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+        }
+      ),
+      ListTile(  
+          title: Text("Ingredients List"),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => IngredientsList()));
+          }
       ),
       ListTile(
         title: Text("Log Out"),
         onTap: () {
-          logOut(rootState);
+          logOut(context.findRootAncestorStateOfType<RootState>());
         }
       )
       ]

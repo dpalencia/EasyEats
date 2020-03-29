@@ -1,10 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
 import 'package:odysseusrecipes/screens/Root.dart';
 
 /* Helper function that logs in and updates app state. */
 void login(RootState rootState, String email, String password) async {
-  rootState.widget.getAuth().signInWithEmailAndPassword(email: email, password: password);
-  FirebaseUser user = await rootState.widget.getAuth().currentUser();
+  FirebaseUser user;
+  try {
+    await rootState.widget.getAuth().signInWithEmailAndPassword(email: email, password: password);
+    user = await rootState.widget.getAuth().currentUser();
+  } catch(e) {
+ 
+    return;
+  }
   rootState.setUser(user);
 }
 

@@ -28,20 +28,25 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Log In")
+        title: _register ? Text("Register") : Text("Login")
       ),
-      body: theForm(context)
+      body:  Builder(
+        builder: (BuildContext context) {
+          return theForm(context);
+        }
+      )
     );
   }
- 
-  Widget theForm(context) {
+
+
+  Widget theForm(BuildContext context) {
     if(_register) 
-      return showRegisterForm();
+      return showRegisterForm(context);
     else 
       return showLoginForm(context);
   }
 
-  Widget showRegisterForm() {
+  Widget showRegisterForm(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(20.0),
       child: Form(
@@ -52,7 +57,7 @@ class LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             emailInput(),
             passwordInput(),
-            registerButton(),
+            registerButton(context),
             returnToLogin()
           ]
         )
@@ -60,7 +65,7 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-    Widget registerButton() {
+    Widget registerButton(BuildContext context) {
     return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 45.0),
         child: SizedBox(
@@ -73,7 +78,7 @@ class LoginScreenState extends State<LoginScreen> {
             child: Text(
                 "Register",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: createAnAccount,
+            onPressed: () { createAnAccount(context); },
           ),
         ));
   }
@@ -165,7 +170,7 @@ class LoginScreenState extends State<LoginScreen> {
             elevation: 5.0,
             shape: RoundedRectangleBorder(
                 borderRadius:BorderRadius.circular(30.0)),
-            color: Colors.blue,
+            color: Colors.blue, 
             child: Text(
                 "Log In",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
@@ -176,7 +181,7 @@ class LoginScreenState extends State<LoginScreen> {
         );
   }
 
-  void validate(BuildContext context) async { 
+  void validate(BuildContext context) { 
     if(_formKey.currentState.validate() == false) { // Validate the fields
       return;
     }
@@ -186,7 +191,7 @@ class LoginScreenState extends State<LoginScreen> {
     
   }
 
-  void createAnAccount() async {
+  void createAnAccount(BuildContext context) async {
     if(_formKey.currentState.validate() == false) {
       return;
     }
@@ -202,6 +207,10 @@ class LoginScreenState extends State<LoginScreen> {
       );
     } catch(signupError) {
       print("Error:" + signupError.toString());
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("That email address is already in use!")
+        )
+      );
       return;
     }
   }

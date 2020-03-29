@@ -20,7 +20,7 @@ class RootState extends State<Root> {
     if(_user == null) {
       return LoginScreen(widget._auth);
     } else {
-      return Home(logoutCallBack);
+      return Home();
     }
   }
 
