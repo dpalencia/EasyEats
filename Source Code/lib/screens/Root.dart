@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/screens/LoginScreen.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 class Root extends StatefulWidget {
-  Root(this._auth);
+  Root(this._auth, this._storage);
   final FirebaseAuth _auth;
+  final FirebaseStorage _storage;
+  
   State<StatefulWidget> createState() => RootState();
 
   FirebaseAuth getAuth() {
