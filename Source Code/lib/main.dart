@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData( 
         primarySwatch: Colors.blue,
       ),
-      home: Root(FirebaseAuth.instance, FirebaseStorage.instance)
+      home: Text("Hello, world")
+      //home: Root(FirebaseAuth.instance, FirebaseStorage.instance)
     );
   }
 }
