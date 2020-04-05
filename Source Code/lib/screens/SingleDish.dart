@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/classes/AppBarConfig.dart';
-import 'package:food_app/classes/StarsRating.dart';
+import 'package:odysseusrecipes/classes/AppBarConfig.dart';
+import 'package:odysseusrecipes/classes/StarsRating.dart';
 
-class PageOne extends StatelessWidget {
+
+class SingleDish extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -13,12 +14,10 @@ class PageOne extends StatelessWidget {
         body: Column(
           children: <Widget>[
             FittedBox(
-              child: Image.asset(
-                'images/EggSalmon.jpg',
-                height: 500,
-                width: 500,
-                fit: BoxFit.fill,
-              ), // demo, replace with what user clicked on.
+              child: Image.network(
+                'https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2FwheatBread.jpg?alt=media&token=5143ed7e-1a99-49df-9eca-cec8ab656fb0'
+                ),
+                fit: BoxFit.fill, // demo, replace with what user clicked on.
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -57,7 +56,7 @@ var name = Container(
 
 var ingredients = Container(
   child: Text(
-      '* Wild salmon fillet for 1 to 6 servings salt and pepper \n* Salt and ground pepper \n* Yadayadayadayada'),
+      '*Wild salmon fillet for 1 to 6 servings salt and pepper \n* Salt and ground pepper \n* Yadayadayadayada'),
 );
 
 var prepIcon = Container(
