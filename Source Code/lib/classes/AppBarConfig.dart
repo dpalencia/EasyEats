@@ -3,22 +3,33 @@ import 'package:flutter/material.dart';
 class AppBarConfig extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
+    return Container(
           color: Colors.red,
           child: AppBar(
             backgroundColor: Colors.orange[400],
-            leading: new IconButton(
-                icon: backIcon,
-                onPressed: null), //change onPressed go to previous screen
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }
+            ),
             actions: <Widget>[
               userIcon,
               settingsIcon,
-            ],
+            ]
           ),
-        ),
-      ],
+            
+            /*
+            leading: new IconButton(
+                icon: backIcon,
+                onPressed: () {
+                  print("Icon Pressed");
+                  Navigator.of(context).pop();
+                }
+              ),*/ //change onPressed go to previous screen
     );
   }
 
@@ -34,7 +45,9 @@ var backIcon = Container(
       Icons.arrow_back_ios,
       color: Colors.white,
     ),
-    onPressed: () {}, // GO BACK
+    onPressed: () {
+      print("Inside icon");
+    }, // GO BACK
   ),
 );
 

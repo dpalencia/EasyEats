@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 // DB Connection Based off:
 // https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html

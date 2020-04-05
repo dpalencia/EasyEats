@@ -4,6 +4,7 @@ import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/screens/Root.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
+import 'package:odysseusrecipes/screens/SingleDish.dart';
 
 Drawer mainDrawer(BuildContext context) {
   return Drawer(   
@@ -14,6 +15,13 @@ Drawer mainDrawer(BuildContext context) {
         onTap: () {
           Navigator.of(context).pop();
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+        }
+      ),
+      ListTile(
+        title: Text("DEBUG: Single Dish"),
+        onTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SingleDish()));
         }
       ),
       ListTile(  
