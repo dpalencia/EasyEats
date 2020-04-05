@@ -16,6 +16,6 @@ class MyApp extends StatelessWidget {
       ),
       home: Root(FirebaseAuth.instance, FirebaseStorage.instance)
     );
-  }
+  } 
 }
 
