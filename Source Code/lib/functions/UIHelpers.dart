@@ -54,3 +54,19 @@ RaisedButton buttonFunction(Function f, String text) {
             onPressed: f
   );
 }
+
+AppBar singlePageAppBar(BuildContext context, void callback()) {
+  return AppBar(
+            backgroundColor: Colors.orange[400],
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                callback();
+              }
+            ),
+      );
+}
+
