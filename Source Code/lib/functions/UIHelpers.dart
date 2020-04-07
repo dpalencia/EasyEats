@@ -5,6 +5,7 @@ import 'package:odysseusrecipes/screens/Root.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Drawer mainDrawer(BuildContext context) {
   return Drawer(   
