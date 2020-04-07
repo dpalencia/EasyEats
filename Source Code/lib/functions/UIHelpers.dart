@@ -8,7 +8,10 @@ import 'package:odysseusrecipes/screens/Home.dart';
 import 'package:odysseusrecipes/screens/DishesList.dart';
 =======
 import 'package:odysseusrecipes/screens/SingleDish.dart';
+<<<<<<< HEAD
 >>>>>>> Stateful Ingredients - In Work
+=======
+>>>>>>> e541123a785f8eb49c96905c01f952ab13620a4e
 import 'package:firebase_auth/firebase_auth.dart';
 
 Drawer mainDrawer(BuildContext context) {

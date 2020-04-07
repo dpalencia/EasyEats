@@ -78,7 +78,7 @@ class LoginScreenState extends State<LoginScreen> {
             child: Text(
                 "Register",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: () { createAnAccount(context); },
+            onPressed: () { createAnAccount(context, _email, _password); },
           ),
         ));
   }
@@ -191,29 +191,7 @@ class LoginScreenState extends State<LoginScreen> {
     
   }
 
-  void createAnAccount(BuildContext context) async {
-    if(_formKey.currentState.validate() == false) {
-      return;
-    }
-    _formKey.currentState.save();
-    try { 
-      final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(email: _email, password: _password)).user;
-      print(_email);  
-      print(_password);
-      Firestore.instance.collection("user").document(user.uid.toString()).setData(
-        {
-          "userIngredients": List<Map>()
-        }
-      );
-    } catch(signupError) {
-      print("Error:" + signupError.toString());
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("That email address is already in use!")
-        )
-      );
-      return;
-    }
-  }
+
 
 }
 
