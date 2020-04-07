@@ -4,7 +4,8 @@ import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/screens/Root.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
-import 'package:odysseusrecipes/screens/SingleDish.dart';
+import 'package:odysseusrecipes/screens/DishesList.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Drawer mainDrawer(BuildContext context) {
   return Drawer(   
@@ -18,10 +19,10 @@ Drawer mainDrawer(BuildContext context) {
         }
       ),
       ListTile(
-        title: Text("DEBUG: Single Dish"),
+        title: Text("Dishes"),
         onTap: () {
           Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SingleDish()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList()));
         }
       ),
       ListTile(  
@@ -54,3 +55,19 @@ RaisedButton buttonFunction(Function f, String text) {
             onPressed: f
   );
 }
+
+AppBar singlePageAppBar(BuildContext context, void callback()) {
+  return AppBar(
+            backgroundColor: Colors.orange[400],
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                callback();
+              }
+            ),
+      );
+}
+

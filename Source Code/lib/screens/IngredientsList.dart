@@ -1,16 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:odysseusrecipes/classes/Ingredient.dart';
+import 'package:odysseusrecipes/screens/SingleIngredient.dart';
+import 'package:odysseusrecipes/classes/IngredientTile.dart';
 
 // DB Connection Based off:
 // https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html
 // https://pub.dev/documentation/firebase/latest/firebase_firestore/DocumentSnapshot-class.html
 
-class IngredientsList extends StatelessWidget {
+class IngredientsList extends StatefulWidget {
+  @override 
+  createState() => IngredientsListState();
+}
+
+class IngredientsListState extends State<IngredientsList> {
+  Ingredient _ingredient;
+
+
+
   // The returned streambuilder will listen for updates 
   // to the DB and update itself with live data.
   // The streambuilder will rebuild everything beneath,
   // any time the data changes.
-
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot> (
       // The firestore snapshots() function
@@ -39,50 +50,37 @@ class IngredientsList extends StatelessWidget {
   // ingredient.description
   // ingredient.thumbnail
   Widget _buildIngredient(BuildContext context, DocumentSnapshot data) {
-        final Ingredient ingredient = Ingredient.fromSnapshot(data);
-        return Padding(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(ingredient.imageURL)
-              ),
-              title: Text(ingredient.name),
-            ), 
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)
-        ); 
+        //final Ingredient ingredient = Ingredient.fromSnapshot(data);
+        return IngredientTile(data, setIngredient, context); 
+  }
+
+  void clearIngredient() {
+    setState(() {
+      _ingredient = null;
+    });
+  }
+
+  void setIngredient(Ingredient ingredient) {
+    setState( () {
+      _ingredient = ingredient;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Ingredients List"),
-      ),
-      body: _buildBody(context)
-    );
+    // Statefully render either a single ingredient
+    // Or the list of ingredients if no ingredient is defined
+    // In this state object.
+    if(_ingredient != null)
+      return SingleIngredient(_ingredient, clearIngredient);
+    else 
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Ingredients List"),
+        ),
+        body: _buildBody(context)
+      );
   }
 }
 
 
-class Ingredient {
-  // The fields
-  final String name; 
-  final String description;
-  final List categories;
-  final DocumentReference reference;
-  final String imageURL;
-
-  // Defining named constructors from initializer list.
-  Ingredient(name, description, categories, reference, url): 
-    name = name, description = description, 
-    reference = reference,
-    categories = categories,
-    imageURL = url;
-
-  Ingredient.fromMap(Map<String, dynamic> map, DocumentReference reference) 
-    : this(map['name'], map['description'], map['categories'], reference, map['imageURL']);
-  Ingredient.fromSnapshot(DocumentSnapshot snapshot) 
-    : this.fromMap(snapshot.data, snapshot.reference);
-  @override 
-  String toString() => "Record<$name>";
-
-}

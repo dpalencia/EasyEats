@@ -27,6 +27,10 @@ class RootState extends State<Root> {
     }
   }
 
+  FirebaseUser getUser() {
+    return _user;
+  }
+
   @override 
   void initState() {
     super.initState();

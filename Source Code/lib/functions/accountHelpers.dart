@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart'; 
 import 'package:odysseusrecipes/screens/Root.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /* Helper function that logs in and updates app state. */
 void login(RootState rootState, String email, String password) async {
@@ -19,3 +21,7 @@ void logOut(RootState rootState) {
   rootState.clearUser();
 }
 
+void addToShoppingCart(String id) {
+  // FirebaseUser user = context.findRootAncestorStateOfType<RootState>().getUser();
+  Firestore.instance.collection("user").document(id);
+}
