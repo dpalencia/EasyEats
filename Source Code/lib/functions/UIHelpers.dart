@@ -4,7 +4,11 @@ import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/screens/Root.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
+<<<<<<< HEAD
 import 'package:odysseusrecipes/screens/DishesList.dart';
+=======
+import 'package:odysseusrecipes/screens/SingleDish.dart';
+>>>>>>> Stateful Ingredients - In Work
 import 'package:firebase_auth/firebase_auth.dart';
 
 Drawer mainDrawer(BuildContext context) {
