@@ -51,7 +51,7 @@ class IngredientsListState extends State<IngredientsList> {
   // ingredient.thumbnail
   Widget _buildIngredient(BuildContext context, DocumentSnapshot data) {
         //final Ingredient ingredient = Ingredient.fromSnapshot(data);
-        return IngredientTile(data, setIngredient); 
+        return IngredientTile(data, setIngredient, context); 
   }
 
   void clearIngredient() {
