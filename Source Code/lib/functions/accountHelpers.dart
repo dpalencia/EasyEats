@@ -37,15 +37,14 @@ String getTheUserID(BuildContext context) {
   return root.getUser().uid.toString();
 }
 
-Map<String, dynamic> getUserData(String uid) {
+Future<Map<String, dynamic>> getUserData(String uid) async {
   Firestore store = Firestore.instance;
   CollectionReference collectionRef = store.collection("user");
   DocumentReference userDocument = collectionRef.document(uid);
-  Future<DocumentSnapshot> snapshotFuture = userDocument.get();
-  DocumentSnapshot theSnapshot;
-  snapshotFuture.then((val) => theSnapshot = val);
-  return theSnapshot.data;
+  DocumentSnapshot snapshot = await userDocument.get();
+  return snapshot.data;
 }
+
 
 
 /*

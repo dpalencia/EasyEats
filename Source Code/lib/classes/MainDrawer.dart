@@ -18,21 +18,21 @@ class MainDrawer extends StatelessWidget  {
       ListTile(
         title: Text("Landing"),
         onTap: () {
-          //Navigator.of(context).pop();
+          Navigator.of(context).pop();
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
         }
       ),
       ListTile(
         title: Text("Dishes"),
         onTap: () {
-          //Navigator.of(context).pop();
+          Navigator.of(context).pop();
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList()));
         }
       ),
       ListTile(  
           title: Text("Ingredients List"),
           onTap: () {
-            //Navigator.of(context).pop();
+            Navigator.of(context).pop();
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => IngredientsList()));
           }
       ),

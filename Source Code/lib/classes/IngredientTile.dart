@@ -11,16 +11,17 @@ import 'package:odysseusrecipes/functions/accountHelpers.dart';
 
 class IngredientTile extends StatefulWidget {
   final _screenCallback;
-  IngredientTile(this._screenCallback); // Pass the data down to its state.
+  final _ingredient;
+  IngredientTile(this._screenCallback, this._ingredient); // Pass the data down to its state.
   @override 
-  createState() => IngredientTileState(this._screenCallback);  // Create state.
+  createState() => IngredientTileState(_screenCallback, _ingredient);  // Create state.
 }
 
 class IngredientTileState extends State<IngredientTile> {
   final _screenCallback;
   Ingredient _ingredient;
   bool _isInShoppingCart = false;
-  IngredientTileState(this._screenCallback); // Initialize the data field in consructor.
+  IngredientTileState(this._screenCallback, this._ingredient); // Initialize the data field in consructor.
   void addToShoppingCart() {
     setState( () {
       _isInShoppingCart = true;  
@@ -38,26 +39,59 @@ class IngredientTileState extends State<IngredientTile> {
   InkWell _buildIcon(String userID) {
     return InkWell(
       onTap: _isInShoppingCart ? 
-        () { setUserIngredient(_ingredient, userID); }
-      : () {},
+        () { removeUserIngredient(userID); }
+      : () { setUserIngredient(userID); },
       child: Icon(
         (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
       )
     );
   }
 
+  void removeUserIngredient(String user) async {
+    Firestore store = Firestore.instance;
+    Map<String, dynamic> theUserData = await getUserData(user);
+    List<dynamic> ingredients = theUserData["userIngredients"];
+    if(ingredients.contains(_ingredient.name)) {
+      ingredients.remove(_ingredient.name);
+    }
+    store.collection("user").document(user).setData( {"userIngredients" : ingredients} );
+    setIngredientState(user);
+  }
 
-  void setUserIngredient(Ingredient ingredient, String user) {
-    Map<String, dynamic> theUserData = getUserData(user);
-    List<String> ingredients = theUserData["userIngredients"];
+  void setUserIngredient(String user) async {
+    Firestore store = Firestore.instance;
+    Map<String, dynamic> theUserData = await getUserData(user);
+    List<dynamic> ingredients = theUserData["userIngredients"];
+    if(!ingredients.contains(_ingredient.name))
+      ingredients.add(_ingredient.name);
     print(ingredients.toString());
-    //store.collection("user").document(user).setData();
+    store.collection("user").document(user).setData( {"userIngredients" : ingredients} );
+    setIngredientState(user);
+  }
+
+  void setIngredientState(String user) async {
+    Map<String, dynamic> theUserData = await getUserData(user);
+    List<dynamic> ingredients = theUserData["userIngredients"];
+    if(this.mounted) { // Ensure the state object is in a widget tree
+      // Check database for ingredient; set state accordingly
+      if(ingredients.contains(_ingredient.name)) {
+          setState(() {
+            _isInShoppingCart = true;
+          });
+        }
+      else {
+        setState( () {
+          _isInShoppingCart = false;
+        });
+      }
+    }
   }
 
   @override
   build(BuildContext context) {
      RootState rootState = InheritRootState.of(context);
      String currentUID = rootState.getUser().uid;
+     setIngredientState(currentUID);
      return Padding(
             child: ListTile(
               leading: CircleAvatar(
@@ -65,7 +99,7 @@ class IngredientTileState extends State<IngredientTile> {
               ),
               trailing: _buildIcon(currentUID),
               title: Text(_ingredient.name),
-              onTap: () { _screenCallback (_ingredient); }
+              onTap: () { _screenCallback (_ingredient); } // Set parent state to current ingredient
             ), 
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)
      ); 

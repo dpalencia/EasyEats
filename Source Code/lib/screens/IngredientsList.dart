@@ -41,7 +41,7 @@ class IngredientsListState extends State<IngredientsList> {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
-      children: snapshot.map((data) => _buildIngredient()).toList()
+      children: snapshot.map((data) => _buildIngredient(data)).toList()
     );
   }
 
@@ -50,9 +50,9 @@ class IngredientsListState extends State<IngredientsList> {
   // ingredient.name
   // ingredient.description
   // ingredient.thumbnail
-  Widget _buildIngredient() {
+  Widget _buildIngredient(DocumentSnapshot snapshot) {
         //final Ingredient ingredient = Ingredient.fromSnapshot(data);
-        return IngredientTile(setIngredient); 
+        return IngredientTile(setIngredient, Ingredient.fromSnapshot(snapshot)); 
   }
 
   void clearIngredient() {
