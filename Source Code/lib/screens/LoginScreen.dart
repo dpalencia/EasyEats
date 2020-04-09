@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/functions/UIHelpers.dart';
+import 'dart:io'; // Sleep
 
+import '../main.dart';
 import 'Root.dart';
 // https://medium.com/flutterpub/flutter-how-to-do-user-login-with-firebase-a6af760b14d5
 
@@ -20,6 +22,7 @@ class LoginScreenState extends State<LoginScreen> {
   String _email; // User email. Maintained by state,
   String _password; // User password. Maintained by state.
   bool _register = false; // Keep track of whether to statefully show the log in or register screen
+  bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
   final myController = TextEditingController();
@@ -32,15 +35,19 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       body:  Builder(
         builder: (BuildContext context) {
-          return theForm(context);
+            return buildTheForm(context);
         }
       )
     );
   }
 
 
-  Widget theForm(BuildContext context) {
-    if(_register) 
+  Widget buildTheForm(BuildContext context) {
+    if(_isLoading)
+      return Center(
+        child: CircularProgressIndicator()
+      );
+    else if(_register) 
       return showRegisterForm(context);
     else 
       return showLoginForm(context);
@@ -78,7 +85,7 @@ class LoginScreenState extends State<LoginScreen> {
             child: Text(
                 "Register",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: () { createAnAccount(context, _email, _password); },
+            onPressed: () { createAnAccount(context); },
           ),
         ));
   }
@@ -187,11 +194,56 @@ class LoginScreenState extends State<LoginScreen> {
     }
     _formKey.currentState.save(); // Save the fields
     // API Log in
-    login(context.findAncestorStateOfType<RootState>(), _email, _password);
+    login(InheritRootState.of(context), _email, _password);
     
   }
 
+  void createAnAccount(BuildContext context) async {
+    
+    setState(() {
+      _isLoading = true;
+    });
 
+    if(_formKey.currentState.validate() == false) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+    _formKey.currentState.save();
+    try { 
+      final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(email: _email, password: _password)).user;
+      //print(_email);  
+      //print(_password);
+      // Use the setData api call to create a Database table for the user.
+      // Then initialize their data fields.
+      Firestore.instance.collection("user").document(user.uid.toString()).setData( {
+          "userIngredients": List<Map>()
+        }
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("User $_email successfully registered.")
+      ));
+      sleep(const Duration(seconds: 5)); // Sleep for 2 seconds before changing state/redirecting to new screen.
+      login(context.findAncestorStateOfType<RootState>(), _email, _password);
+
+    } catch(signupError) {
+      print("Error:" + signupError.toString());
+      setState(() {
+        _isLoading = false;
+      });
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("That email address is already in use!")
+        )
+      );
+      return;
+    }
+  }
 
 }
 
