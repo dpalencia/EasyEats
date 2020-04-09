@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Ingredient.dart';
 import 'package:odysseusrecipes/screens/SingleIngredient.dart';
 import 'package:odysseusrecipes/classes/IngredientTile.dart';
+import '../main.dart';
 
 // DB Connection Based off:
 // https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html

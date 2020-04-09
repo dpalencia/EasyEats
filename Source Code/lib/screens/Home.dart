@@ -6,8 +6,8 @@ import 'package:odysseusrecipes/screens/Root.dart';
 class Home extends StatelessWidget {
 
   @override build(BuildContext context) { 
-    
-    return Scaffold(
+    return MaterialApp (
+      home: Scaffold(
         drawer: MainDrawer(), 
         backgroundColor: Colors.amber[400],
         appBar: AppBar( 
@@ -22,6 +22,7 @@ class Home extends StatelessWidget {
               ),
           ),
         ),
+      )
     );
   }
 }
