@@ -22,19 +22,6 @@ class IngredientTileState extends State<IngredientTile> {
   Ingredient _ingredient;
   bool _isInShoppingCart = false;
   IngredientTileState(this._screenCallback, this._ingredient); // Initialize the data field in consructor.
-  void addToShoppingCart() {
-    setState( () {
-      _isInShoppingCart = true;  
-
-    } 
-    );
-  }
-  void removeFromShoppingCart() {
-    setState( () {
-      _isInShoppingCart = false;  
-    }
-    );
-  }
 
   InkWell _buildIcon(String userID) {
     return InkWell(
