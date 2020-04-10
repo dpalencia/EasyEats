@@ -5,8 +5,7 @@ import 'package:odysseusrecipes/screens/Root.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
 import 'package:odysseusrecipes/screens/DishesList.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+/*
 Drawer mainDrawer(BuildContext context) {
   return Drawer(   
     child: ListView(
@@ -42,7 +41,7 @@ Drawer mainDrawer(BuildContext context) {
     )
   );
 }
-
+*/
 RaisedButton buttonFunction(Function f, String text) {
   return RaisedButton(
             elevation: 5.0,

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:odysseusrecipes/classes/MainDrawer.dart';
 import 'package:odysseusrecipes/functions/UIHelpers.dart';
 import 'package:odysseusrecipes/screens/Root.dart';
 
 class Home extends StatelessWidget {
 
-
   @override build(BuildContext context) { 
-    return Scaffold(
-        drawer: mainDrawer(context), 
+    return MaterialApp (
+      home: Scaffold(
+        drawer: MainDrawer(), 
         backgroundColor: Colors.amber[400],
         appBar: AppBar( 
           title: Text('Recipe App'),
@@ -21,6 +22,7 @@ class Home extends StatelessWidget {
               ),
           ),
         ),
+      )
     );
   }
 }

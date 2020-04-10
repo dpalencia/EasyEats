@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Ingredient.dart';
 import 'package:odysseusrecipes/screens/SingleIngredient.dart';
 import 'package:odysseusrecipes/classes/IngredientTile.dart';
+import '../main.dart';
 
 // DB Connection Based off:
 // https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html
@@ -40,7 +41,7 @@ class IngredientsListState extends State<IngredientsList> {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
-      children: snapshot.map((data) => _buildIngredient(context, data)).toList()
+      children: snapshot.map((data) => _buildIngredient(data)).toList()
     );
   }
 
@@ -49,9 +50,9 @@ class IngredientsListState extends State<IngredientsList> {
   // ingredient.name
   // ingredient.description
   // ingredient.thumbnail
-  Widget _buildIngredient(BuildContext context, DocumentSnapshot data) {
+  Widget _buildIngredient(DocumentSnapshot snapshot) {
         //final Ingredient ingredient = Ingredient.fromSnapshot(data);
-        return IngredientTile(data, setIngredient, context); 
+        return IngredientTile(setIngredient, Ingredient.fromSnapshot(snapshot)); 
   }
 
   void clearIngredient() {

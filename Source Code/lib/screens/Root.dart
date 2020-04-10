@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/screens/LoginScreen.dart';
 import 'package:odysseusrecipes/screens/Home.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
+import '../main.dart';
 
 class Root extends StatefulWidget {
-  Root(this._auth, this._storage);
-  final FirebaseAuth _auth;
-  final FirebaseStorage _storage;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   
   State<StatefulWidget> createState() => RootState();
 
@@ -19,7 +18,15 @@ class Root extends StatefulWidget {
 
 class RootState extends State<Root> {
   FirebaseUser _user;
+
   @override build(BuildContext context) {
+    return InheritRootState(
+      state: this,
+      child: initialScreen()
+    );
+  }
+
+  Widget initialScreen() {
     if(_user == null) {
       return LoginScreen(widget._auth);
     } else {
@@ -63,4 +70,3 @@ class RootState extends State<Root> {
   }
 
 }
-

@@ -8,6 +8,7 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
+import '../main.dart';
 
 //I have this for testing purposes
 //change class name back to DishesList and remove main function.
