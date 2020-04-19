@@ -11,9 +11,10 @@ import '../main.dart';
 /* Helper function that logs in and updates app state. */
 void login(RootState rootState, String email, String password) async {
   FirebaseUser user;
+  FirebaseAuth auth = FirebaseAuth.instance;
   try {
-    await rootState.widget.getAuth().signInWithEmailAndPassword(email: email, password: password);
-    user = await rootState.widget.getAuth().currentUser();
+    await auth.signInWithEmailAndPassword(email: email, password: password);
+    user = await auth.currentUser();
   } catch(e) {
  
     return;
