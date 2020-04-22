@@ -13,13 +13,6 @@ class MainDrawer extends StatelessWidget  {
     child: ListView(
       children: <Widget> [
       ListTile(
-        title: Text("Landing"),
-        onTap: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => LandingScreen()));
-        }
-      ),
-      ListTile(
         title: Text("Dishes"),
         onTap: () {
           Navigator.of(context).pop();

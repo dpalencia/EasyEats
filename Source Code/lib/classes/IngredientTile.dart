@@ -37,28 +37,28 @@ class IngredientTileState extends State<IngredientTile> {
   void removeUserIngredient(String user) async {
     Firestore store = Firestore.instance;
     Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["userIngredients"];
+    List<dynamic> ingredients = theUserData["shoppingList"];
     if(ingredients.contains(_ingredient.name)) {
       ingredients.remove(_ingredient.name);
     }
-    store.collection("user").document(user).setData( {"userIngredients" : ingredients} );
+    store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
     setIngredientState(user);
   }
 
   void setUserIngredient(String user) async {
     Firestore store = Firestore.instance;
     Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["userIngredients"];
+    List<dynamic> ingredients = theUserData["shoppingList"];
     if(!ingredients.contains(_ingredient.name))
       ingredients.add(_ingredient.name);
     print(ingredients.toString());
-    store.collection("user").document(user).setData( {"userIngredients" : ingredients} );
+    store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
     setIngredientState(user);
   }
 
   void setIngredientState(String user) async {
     Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["userIngredients"];
+    List<dynamic> ingredients = theUserData["shoppingList"];
     if(this.mounted) { // Ensure the state object is in a widget tree
       // Check database for ingredient; set state accordingly
       if(ingredients.contains(_ingredient.name)) {
