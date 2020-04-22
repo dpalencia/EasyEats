@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:odysseusrecipes/main.dart';
-import 'package:odysseusrecipes/screens/Home.dart';
+import 'package:odysseusrecipes/screens/LandingScreen.dart';
 import 'package:odysseusrecipes/screens/LoginScreen.dart';
 
 

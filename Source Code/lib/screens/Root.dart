@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/screens/LoginScreen.dart';
-import 'package:odysseusrecipes/screens/Home.dart';
-import '../main.dart';
+import 'LandingScreen.dart';
 
 class InheritRootState extends InheritedWidget {
   // This widget will pass down the state of the root widget.
@@ -55,7 +54,7 @@ class RootState extends State<Root> {
     if(_user == null) {
       return LoginScreen(widget._auth);
     } else {
-      return Home();
+      return LandingScreen();
     }
   }
 
