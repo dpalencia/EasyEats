@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Ingredient.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
-import 'package:odysseusrecipes/screens/SingleIngredient.dart';
+import 'package:odysseusrecipes/screens/Root.dart';
 import 'package:odysseusrecipes/classes/IngredientTile.dart';
-import '../main.dart';
 
 // DB Connection Based off:
 // https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html
@@ -15,8 +14,6 @@ class IngredientsList extends StatefulWidget {
 }
 
 class IngredientsListState extends State<IngredientsList> with SingleTickerProviderStateMixin {
-  Ingredient _ingredient;
-  
   final List<Tab> _theTabs = <Tab> [
     Tab(text: "Browse"),
     Tab(text: "Shopping List"),
@@ -137,17 +134,15 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   // ingredient.description
   // ingredient.thumbnail
   Widget _buildIngredientTile(Ingredient ingredient) {
-    return IngredientTile(setIngredient, ingredient, addToList, removeFromList, key: UniqueKey()); 
+    RootState rootState = InheritRootState.of(context);
+    String uid = rootState.getUser().uid;
+    return IngredientTile(ingredient, addToList, removeFromList, uid, key: UniqueKey()); 
   }
   @override
   Widget build(BuildContext context) {
     // Statefully render either a single ingredient
     // Or the list of ingredients if no ingredient is defined
     // In this state object.
-
-    if(_ingredient != null)
-      return SingleIngredient(_ingredient, clearIngredient);
-    else 
       return Scaffold( // Scaffold with two tabs
         appBar: AppBar(
           title: Text("Ingredients"),
@@ -165,16 +160,5 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
           ],
         )
     );
-}
-  void clearIngredient() {
-    setState(() {
-      _ingredient = null;
-    });
-  }
-
-  void setIngredient(Ingredient ingredient) {
-    setState( () {
-      _ingredient = ingredient;
-    });
   }
 }
