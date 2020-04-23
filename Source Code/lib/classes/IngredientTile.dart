@@ -1,99 +1,172 @@
 import 'package:odysseusrecipes/screens/Root.dart';
-
-import '../main.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Ingredient.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 
 
 class IngredientTile extends StatefulWidget {
-  final _screenCallback;
   final _ingredient;
   final _addToList;
   final _removeFromList;
-  IngredientTile(this._screenCallback, this._ingredient, 
-  this._addToList, this._removeFromList, {Key key}): super(key: key); // Pass the data down to its state.
+  IngredientTile(this._ingredient, this._addToList, 
+  this._removeFromList, this._userID, {Key key}): super(key: key); // Pass the data down to its state.
+  final String _userID;
+
   @override 
-  createState() => IngredientTileState(_screenCallback, _ingredient, _addToList, _removeFromList);  // Create state.
+  createState() => IngredientTileState(_ingredient, _addToList, _removeFromList, _userID);  // Create state.
 }
 
 class IngredientTileState extends State<IngredientTile> {
   final _addToList;
   final _removeFromList;
-  final _screenCallback;
   Ingredient _ingredient;
-  bool _isInShoppingCart = false;
-  IngredientTileState(this._screenCallback, this._ingredient, this._addToList, this._removeFromList); // Initialize the data field in consructor.
+  bool _isInShoppingCart;
+  bool _isInKitchen;
+  final String _userID;
+  IngredientTileState(this._ingredient, this._addToList, this._removeFromList, this._userID); // Initialize the data field in consructor.
+  @override initState() {
+    super.initState();
+    setKitchenBool();
+    setShoppingBool();
+  }
 
-  InkWell _buildIcon(String userID) {
-    return InkWell(
-      onTap: _isInShoppingCart ? 
-        () { removeUserIngredient(userID); }
-      : () { setUserIngredient(userID); },
-      child: Icon(
-        (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
-      )
+  Widget _buildIcon(String userID) {
+    if((_isInKitchen == null) || (_isInShoppingCart == null)) 
+      return CircularProgressIndicator();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        InkWell(
+          onTap: _isInShoppingCart ? 
+              () { removeShoppingIngredient(userID); }
+            : () { setShoppingIngredient(userID); },
+          child: Icon(
+              (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
+            )
+        ),
+        InkWell(
+          onTap: _isInKitchen ? 
+              () { removeKitchenIngredient(userID); }
+            : () { setKitchenIngredient(userID); },
+          child: Icon(
+              (_isInKitchen ? Icons.remove: Icons.add)
+            )
+        )
+      ]
     );
   }
 
-  void removeUserIngredient(String user) async {
-    Firestore store = Firestore.instance;
-    Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["shoppingList"];
+
+
+  Future<List<dynamic>> getListFromDatabase(String listID) async {
+    Map<String, dynamic> theUserData = await(getUserData(_userID));
+    return theUserData[listID];
+  }
+
+  /* Remove an ingredient from shopping list and update state. */
+  void removeShoppingIngredient(String user) async {
+    List<dynamic> ingredients = await getListFromDatabase("shoppingList");
+
     if(ingredients.contains(_ingredient.name)) {
       ingredients.remove(_ingredient.name);
     }
-    store.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
-    setIngredientState(user);
+    // Update ingredient in database
+    Firestore.instance.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
+
+    // Statefully update Shopping List button
+    setState( () {
+    _isInShoppingCart = false;
+    });
     _removeFromList(this.widget, "shopping");
   }
 
-  void setUserIngredient(String user) async {
-    Firestore store = Firestore.instance;
-    Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["shoppingList"];
+  /* Set an ingredient in shopping list and update state of this tile and parent state widget. */
+  void setShoppingIngredient(String user) async {
+    List<dynamic> ingredients = await getListFromDatabase("shoppingList");
     if(!ingredients.contains(_ingredient.name))
       ingredients.add(_ingredient.name);
-    print(ingredients.toString());
-    store.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
-    setIngredientState(user);
+    Firestore.instance.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
+    
+    setState( () {
+    _isInShoppingCart = true;
+    });
     _addToList(this.widget, "shopping");
   }
 
-  void setIngredientState(String user) async {
-    Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["shoppingList"];
-    if(this.mounted) { // Ensure the state object is in a widget tree
-      // Check database for ingredient; set state accordingly
-      if(ingredients.contains(_ingredient.name)) {
+  /* Set an ingredient in kitchen in the database and update state of this tile and parent state widget. */
+  void setKitchenIngredient(String user) async {
+    List<dynamic> ingredients = await getListFromDatabase("myKitchen");
+    if(!ingredients.contains(_ingredient.name))
+      ingredients.add(_ingredient.name);
+    Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
+    setState( () {
+      _isInKitchen = true;
+    });
+    _addToList(this.widget, "myKitchen");
+  }
+
+  /* Remove an ingredient from kitchen in the database and update state of this tile and the parent state widget. */
+  void removeKitchenIngredient(String user) async {
+    List<dynamic> ingredients = await getListFromDatabase("myKitchen");
+    if(ingredients.contains(_ingredient.name))
+      ingredients.remove(_ingredient.name);
+    Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
+    setState( () {
+      _isInKitchen = false;
+    });
+    _removeFromList(this.widget, "myKitchen");
+  }
+
+
+
+  // Check the database and update stateful _isInKitchen and _isInShoppingList.
+  // This should cause the buttons to re-render.
+  void setShoppingBool() async {
+    // Get the most current version of the user's lists
+    Map<String, dynamic> theUserData = await getUserData(_userID);
+    List<dynamic> shoppingList = theUserData["shoppingList"];
+    if(this.mounted) {
+      if(shoppingList.contains(_ingredient.name)) {
           setState(() {
-            _isInShoppingCart = true;
+              _isInShoppingCart = true;
           });
-        }
-      else {
-        setState( () {
-          _isInShoppingCart = false;
-        });
+      } else {
+          setState(() {
+            _isInShoppingCart = false;
+          });
+      }
+    }
+}
+
+
+  void setKitchenBool() async {
+    // Same as setShoppingButtonState(), except for the MyKitcchen list.
+    Map<String, dynamic> theUserData = await getUserData(_userID);
+    List<dynamic> myKitchen = theUserData["myKitchen"];
+    if(this.mounted) {
+      if(myKitchen.contains(_ingredient.name)) {
+          setState(() {
+              _isInKitchen = true;
+          });
+      } else {
+          setState(() {
+            _isInKitchen = false;
+          });
       }
     }
   }
 
   @override
   build(BuildContext context) {
-     RootState rootState = InheritRootState.of(context);
-     String currentUID = rootState.getUser().uid;
-     setIngredientState(currentUID);
      return Padding(
             child: ListTile(
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(_ingredient.imageURL)
               ),
-              trailing: _buildIcon(currentUID),
+              trailing: _buildIcon(_userID),
               title: Text(_ingredient.name),
-              onTap: () { _screenCallback (_ingredient); } // Set parent state to current ingredient
+              //onTap: () { _screenCallback (_ingredient); } // Set parent state to current ingredient
             ), 
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)
      ); 

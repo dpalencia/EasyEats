@@ -59,7 +59,7 @@ Widget dishCard(BuildContext context) {
 var dishCardImage = FittedBox(
   fit: BoxFit.contain,
   child: Image.network(
-      'https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2FwheatBread.jpg?alt=media&token=5143ed7e-1a99-49df-9eca-cec8ab656fb0'),
+      'https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2FwheatBread.jpg?alt=media&token=7eba1572-81b5-4d13-ab52-6e6dbdd10c3b'),
   // demo, replace with get image from database for example (have to pass in values).
 );
 var dishCardText = Container(
