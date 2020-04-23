@@ -22,11 +22,12 @@ class IngredientTileState extends State<IngredientTile> {
   final _screenCallback;
   Ingredient _ingredient;
   bool _isInShoppingCart = false;
-  bool _isInKitchen = false;
+  bool _isInKitchen =;
   IngredientTileState(this._screenCallback, this._ingredient, this._addToList, this._removeFromList); // Initialize the data field in consructor.
 
   Row _buildIcon(String userID) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         InkWell(
           onTap: _isInShoppingCart ? 
@@ -41,7 +42,7 @@ class IngredientTileState extends State<IngredientTile> {
               () { removeKitchenIngredient(userID); }
             : () { setKitchenIngredient(userID); },
           child: Icon(
-              (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
+              (_isInKitchen ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
             )
         )
       ]
@@ -97,7 +98,7 @@ class IngredientTileState extends State<IngredientTile> {
   void setIngredientState(String user) async {
     Map<String, dynamic> theUserData = await getUserData(user);
     List<dynamic> shoppingList = theUserData["shoppingList"];
-    List<dynamic> kitchen = theUserData["kitchen"];
+    List<dynamic> kitchen = theUserData["myKitchen"];
     if(this.mounted) { // Ensure the state object is in a widget tree
       // Check database for ingredient; set state accordingly
       if(shoppingList.contains(_ingredient.name)) {

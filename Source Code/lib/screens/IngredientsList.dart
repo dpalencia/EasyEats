@@ -73,7 +73,7 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   void setShoppingList() async {
       String uid = getTheUserID(context);
       Map<String, dynamic> userData = await getUserData(uid);
-      List<String> userShoppingList = userData["shoppingList"].cast<String>().toList();
+      userShoppingList = userData["shoppingList"].cast<String>().toList();
       if(mounted) {
         Firestore.instance.collection('ingredients').getDocuments().then((snapshot) =>
               setState( () {
@@ -97,9 +97,13 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   }
 
   void setMyKitchen() async {
+      String uid = getTheUserID(context);
+      Map<String, dynamic> userData = await getUserData(uid);
+      userMyKitchen = userData["myKitchen"].cast<String>().toList();
       Firestore.instance.collection('ingredients').getDocuments().then((snapshot) {
           setState( () {
-            myKitchen = _buildList(snapshot.documents);
+            myKitchen = _buildList(snapshot.documents)
+            .where((ingredient) => userMyKitchen.contains(ingredient.getName())).toList();
             widgetLists["myKitchen"] = _buildIngredientWidgets(myKitchen);
           });
         }
