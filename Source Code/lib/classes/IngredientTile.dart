@@ -26,49 +26,85 @@ class IngredientTileState extends State<IngredientTile> {
   final _screenCallback;
   Ingredient _ingredient;
   bool _isInShoppingCart = false;
+  bool _isInKitchen = false;
   IngredientTileState(this._screenCallback, this._ingredient, this._addToList, this._removeFromList); // Initialize the data field in consructor.
 
-  InkWell _buildIcon(String userID) {
-    return InkWell(
-      onTap: _isInShoppingCart ? 
-        () { removeUserIngredient(userID); }
-      : () { setUserIngredient(userID); },
-      child: Icon(
-        (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
-      )
+  Row _buildIcon(String userID) {
+    return Row(
+      children: <Widget>[
+        InkWell(
+          onTap: _isInShoppingCart ? 
+              () { removeShoppingIngredient(userID); }
+            : () { setShoppingIngredient(userID); },
+          child: Icon(
+              (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
+            )
+        ),
+        InkWell(
+          onTap: _isInKitchen ? 
+              () { removeKitchenIngredient(userID); }
+            : () { setKitchenIngredient(userID); },
+          child: Icon(
+              (_isInShoppingCart ? Icons.remove_shopping_cart: Icons.add_shopping_cart)
+            )
+        )
+      ]
     );
   }
 
-  void removeUserIngredient(String user) async {
+  void removeShoppingIngredient(String user) async {
     Firestore store = Firestore.instance;
     Map<String, dynamic> theUserData = await getUserData(user);
     List<dynamic> ingredients = theUserData["shoppingList"];
     if(ingredients.contains(_ingredient.name)) {
       ingredients.remove(_ingredient.name);
     }
-    store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
+    store.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
     setIngredientState(user);
     _removeFromList(this.widget, "shopping");
   }
 
-  void setUserIngredient(String user) async {
+  void setShoppingIngredient(String user) async {
     Firestore store = Firestore.instance;
     Map<String, dynamic> theUserData = await getUserData(user);
     List<dynamic> ingredients = theUserData["shoppingList"];
     if(!ingredients.contains(_ingredient.name))
       ingredients.add(_ingredient.name);
-    print(ingredients.toString());
-    store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
+    store.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
     setIngredientState(user);
     _addToList(this.widget, "shopping");
   }
 
+  void setKitchenIngredient(String user) async {
+    List<dynamic> ingredients = await getIngredientList(user, "myKitchen");
+    if(!ingredients.contains(_ingredient.name))
+      ingredients.add(_ingredient.name);
+    Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
+    setIngredientState(user);
+    _addToList(this.widget, "myKitchen");
+  }
+
+  void removeKitchenIngredient(String user) async {
+    List<dynamic> ingredients = await getIngredientList(user, "myKitchen");
+    if(!ingredients.contains(_ingredient.name))
+      ingredients.remove(_ingredient.name);
+    Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
+    setIngredientState(user);
+    _removeFromList(this.widget, "myKitchen");
+  }
+
+  Future<List<dynamic>> getIngredientList(String user, String list) async {
+    Map<String, dynamic> theUserData = await getUserData(user);
+    return theUserData[list].toList();
+  }
+
   void setIngredientState(String user) async {
     Map<String, dynamic> theUserData = await getUserData(user);
-    List<dynamic> ingredients = theUserData["shoppingList"];
+    List<dynamic> shoppingList = theUserData["shoppingList"];
+    List<dynamic> kitchen = theUserData["kitchen"];
     if(this.mounted) { // Ensure the state object is in a widget tree
       // Check database for ingredient; set state accordingly
-      if(ingredients.contains(_ingredient.name)) {
+      if(shoppingList.contains(_ingredient.name)) {
           setState(() {
             _isInShoppingCart = true;
           });
@@ -77,6 +113,15 @@ class IngredientTileState extends State<IngredientTile> {
         setState( () {
           _isInShoppingCart = false;
         });
+      }
+      if(kitchen.contains(_ingredient.name)) {
+        setState(() {
+            _isInKitchen = true;
+          });
+      } else {
+        setState(() {
+            _isInKitchen = false;
+          });
       }
     }
   }
