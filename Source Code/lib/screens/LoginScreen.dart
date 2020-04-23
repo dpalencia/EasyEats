@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
-import 'package:odysseusrecipes/functions/UIHelpers.dart';
 import 'dart:io'; // Sleep
-
-import '../main.dart';
 import 'Root.dart';
 // https://medium.com/flutterpub/flutter-how-to-do-user-login-with-firebase-a6af760b14d5
 
@@ -18,12 +15,11 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> { 
   final FirebaseAuth _auth; // Pass down the _auth object.
-  LoginScreenState(this._auth);   
   String _email; // User email. Maintained by state,
   String _password; // User password. Maintained by state.
   bool _register = false; // Keep track of whether to statefully show the log in or register screen
   bool _isLoading = false;
-
+  LoginScreenState(this._auth);
   final _formKey = GlobalKey<FormState>();
   final myController = TextEditingController();
 
@@ -120,9 +116,7 @@ class LoginScreenState extends State<LoginScreen> {
     return Container(
       margin: const EdgeInsets.all(20.0),
       child: Form(
-        key: _formKey, // Why do we need a key here?
-        // This is so the state of the 
-        // form is preserved every time this widget is built.
+        key: _formKey,
         child: ListView(
           children: <Widget>[
             emailInput(),
@@ -140,6 +134,7 @@ class LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
       child: TextFormField(
+        key: Key("emailInput"),
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
@@ -156,6 +151,7 @@ class LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0), 
       child: TextFormField( 
+        key: Key("passwordInput"),
         maxLines: 1,
         autofocus: false,
         obscureText: true,
@@ -174,6 +170,7 @@ class LoginScreenState extends State<LoginScreen> {
         child: SizedBox(
           height: 40.0,
           child: RaisedButton(
+            key: Key("loginButton"),
             elevation: 5.0,
             shape: RoundedRectangleBorder(
                 borderRadius:BorderRadius.circular(30.0)),

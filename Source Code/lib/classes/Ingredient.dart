@@ -8,6 +8,10 @@ class Ingredient {
   final DocumentReference reference;
   final String imageURL;
 
+  String getName() {
+    return name;
+  }
+
   // Defining named constructors from initializer list.
   Ingredient(name, description, categories, reference, url): 
     name = name, description = description, 

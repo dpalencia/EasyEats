@@ -1,10 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:odysseusrecipes/functions/accountHelpers.dart';
-import 'package:odysseusrecipes/screens/Root.dart';
-import 'package:odysseusrecipes/screens/IngredientsList.dart';
-import 'package:odysseusrecipes/screens/Home.dart';
-import 'package:odysseusrecipes/screens/DishesList.dart';
+
 /*
 Drawer mainDrawer(BuildContext context) {
   return Drawer(   

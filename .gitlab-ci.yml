@@ -1,6 +1,7 @@
 stages:
   - test # All jobs related to testing
   - build # Build the app for iOS and Android
+
 flutter_test: # Flutter test lane
   stage: test # Test stage
   script:
@@ -16,7 +17,6 @@ flutter_build_android: # Build for android.
     - flutter packages get
     - flutter clean
   script: # Build the android apk.
-     - cd "Source Code"
      - flutter build apk
   artifacts: #Path where the apk will be saved.
     paths:

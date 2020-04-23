@@ -1,14 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/screens/LoginScreen.dart';
-import 'package:odysseusrecipes/screens/Home.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import '../main.dart';
+import 'LandingScreen.dart';
+
+class InheritRootState extends InheritedWidget {
+  // This widget will pass down the state of the root widget.
+  // https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html
+  final RootState state;
+
+  InheritRootState({
+    this.state,
+    child
+  }): 
+  super(child: child);  // Use Widget constructor fields (inherited from Widget class)
+
+  static RootState of(BuildContext context) {
+    // Somewhere down in the widget tree,
+    // The context will be passed in here to get the
+    // Root State.
+    return context.dependOnInheritedWidgetOfExactType<InheritRootState>().state;
+  }
+  @override 
+  bool updateShouldNotify(InheritRootState oldWidget) {
+    // Any time the root state is updated,
+    // This must be reflected in all locations
+    // Where this inherited widget is available.
+    return oldWidget.state != state;
+  }
+}
 
 class Root extends StatefulWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  
+
   State<StatefulWidget> createState() => RootState();
 
   FirebaseAuth getAuth() {
@@ -17,6 +40,7 @@ class Root extends StatefulWidget {
 }
 
 class RootState extends State<Root> {
+
   FirebaseUser _user;
 
   @override build(BuildContext context) {
@@ -30,7 +54,7 @@ class RootState extends State<Root> {
     if(_user == null) {
       return LoginScreen(widget._auth);
     } else {
-      return Home();
+      return LandingScreen();
     }
   }
 
