@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/MainDrawer.dart';
+import 'package:odysseusrecipes/screens/IngredientsList.dart';
+import 'package:odysseusrecipes/screens/DishesList.dart';
 
 class LandingScreen extends StatelessWidget {
   @override
@@ -42,7 +44,7 @@ class LandingScreen extends StatelessWidget {
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children:  <Widget>[
         Row(
           children: <Widget>[
@@ -66,7 +68,7 @@ class MainScreen extends StatelessWidget {
                   'Categories',
                   style: TextStyle(
                     fontFamily: 'Caveat',
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     color: Colors.black,
                   ),
                 ),
@@ -92,13 +94,13 @@ class MainScreen extends StatelessWidget {
                     'Ingredients',
                     style: TextStyle(
                         fontFamily: 'Caveat',
-                        fontSize: 40.0,
+                        fontSize: 20.0,
                         color: Colors.black,
                     ),
                   ),
                 ),
                 onPressed: (){
-                  print('Ingrediets pressed');
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => IngredientsList()));
                 },
               ),
           ),
@@ -118,13 +120,13 @@ class MainScreen extends StatelessWidget {
                   'Dishes',
                   style: TextStyle(
                     fontFamily: 'Caveat',
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     color: Colors.black,
                   ),
                 ),
               ),
               onPressed: (){
-                print('Dishes pressed');
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList()));
               },
             ),
           ),
@@ -144,7 +146,7 @@ class MainScreen extends StatelessWidget {
                   'Favorites',
                   style: TextStyle(
                     fontFamily: 'Caveat',
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     color: Colors.black,
                   ),
                 ),
