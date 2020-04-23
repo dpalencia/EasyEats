@@ -12,16 +12,21 @@ import 'package:odysseusrecipes/functions/accountHelpers.dart';
 class IngredientTile extends StatefulWidget {
   final _screenCallback;
   final _ingredient;
-  IngredientTile(this._screenCallback, this._ingredient); // Pass the data down to its state.
+  final _addToList;
+  final _removeFromList;
+  IngredientTile(this._screenCallback, this._ingredient, 
+  this._addToList, this._removeFromList, {Key key}): super(key: key); // Pass the data down to its state.
   @override 
-  createState() => IngredientTileState(_screenCallback, _ingredient);  // Create state.
+  createState() => IngredientTileState(_screenCallback, _ingredient, _addToList, _removeFromList);  // Create state.
 }
 
 class IngredientTileState extends State<IngredientTile> {
+  final _addToList;
+  final _removeFromList;
   final _screenCallback;
   Ingredient _ingredient;
   bool _isInShoppingCart = false;
-  IngredientTileState(this._screenCallback, this._ingredient); // Initialize the data field in consructor.
+  IngredientTileState(this._screenCallback, this._ingredient, this._addToList, this._removeFromList); // Initialize the data field in consructor.
 
   InkWell _buildIcon(String userID) {
     return InkWell(
@@ -43,6 +48,7 @@ class IngredientTileState extends State<IngredientTile> {
     }
     store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
     setIngredientState(user);
+    _removeFromList(this.widget, "shopping");
   }
 
   void setUserIngredient(String user) async {
@@ -54,6 +60,7 @@ class IngredientTileState extends State<IngredientTile> {
     print(ingredients.toString());
     store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
     setIngredientState(user);
+    _addToList(this.widget, "shopping");
   }
 
   void setIngredientState(String user) async {
@@ -82,7 +89,7 @@ class IngredientTileState extends State<IngredientTile> {
      return Padding(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(_ingredient.imageURL)
+                backgroundImage: NetworkImage("https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2Fpotatoes.jpg?alt=media&token=5180b9e5-4ab6-4e15-bc20-075e70a8bde6")
               ),
               trailing: _buildIcon(currentUID),
               title: Text(_ingredient.name),
