@@ -12,21 +12,7 @@ class MainDrawer extends StatelessWidget  {
     return Drawer(   
     child: ListView(
       children: <Widget> [
-      DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.amber[500],
-                ),
-                child: Text(
-                  'Hello User!',
-                  style: TextStyle(
-                      fontFamily: 'Caveat',
-                      color: Colors.white,
-                      fontSize: 40.0
-                  ),
-                ),
-              ),
       ListTile(
-        leading: Icon(Icons.add_circle_outline),
         title: Text("Dishes"),
         onTap: () {
           Navigator.of(context).pop();
@@ -34,7 +20,6 @@ class MainDrawer extends StatelessWidget  {
         }
       ),
       ListTile(  
-          leading: Icon(Icons.add_circle_outline),
           title: Text("Ingredients List"),
           onTap: () {
             Navigator.of(context).pop();
@@ -42,7 +27,6 @@ class MainDrawer extends StatelessWidget  {
           }
       ),
       ListTile(
-        leading: Icon(Icons.add_circle_outline),
         title: Text("Log Out"),
         onTap: () {
           Navigator.of(context).pop();

@@ -9,6 +9,7 @@ class LandingScreen extends StatelessWidget {
     /* IMPORTANT: Wrap the landing screen in a MaterialApp widget
       Because we want the navigator to be nested underneath the "Root" state
       otherwise child widgets will not find the state.
+      
       The Landing Screen begins at the bottom of the navigator stack.
     */
     return MaterialApp(home: Scaffold (
@@ -49,7 +50,7 @@ class MainScreen extends StatelessWidget {
         Row(
           children: <Widget>[
             Expanded(
-              child: Image.network('https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2Flanding.jpg?alt=media&token=6bc75697-d49a-4dd5-b70d-63a1b8241e5a'),
+              child: Image.asset('images/image1.jpg'),
             ),
           ],
         ),

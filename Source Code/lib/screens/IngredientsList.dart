@@ -16,7 +16,14 @@ class IngredientsList extends StatefulWidget {
 
 class IngredientsListState extends State<IngredientsList> with SingleTickerProviderStateMixin {
   Ingredient _ingredient;
-  
+  // The returned streambuilder will listen for updates 
+  // to the DB and update itself with live data.
+  // The streambuilder will rebuild everything beneath,
+  // any time the data changes.
+
+  // A list of filters, which will cause state to update and the list to rebuild
+  // When filters are applied.
+
   final List<Tab> _theTabs = <Tab> [
     Tab(text: "Browse"),
     Tab(text: "Shopping List"),
