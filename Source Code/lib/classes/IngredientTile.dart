@@ -46,7 +46,7 @@ class IngredientTileState extends State<IngredientTile> {
     if(ingredients.contains(_ingredient.name)) {
       ingredients.remove(_ingredient.name);
     }
-    store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
+    store.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
     setIngredientState(user);
     _removeFromList(this.widget, "shopping");
   }
@@ -58,7 +58,7 @@ class IngredientTileState extends State<IngredientTile> {
     if(!ingredients.contains(_ingredient.name))
       ingredients.add(_ingredient.name);
     print(ingredients.toString());
-    store.collection("user").document(user).setData( {"shoppingList" : ingredients} );
+    store.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
     setIngredientState(user);
     _addToList(this.widget, "shopping");
   }
@@ -89,7 +89,7 @@ class IngredientTileState extends State<IngredientTile> {
      return Padding(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage("https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2Fpotatoes.jpg?alt=media&token=5180b9e5-4ab6-4e15-bc20-075e70a8bde6")
+                backgroundImage: NetworkImage(_ingredient.imageURL)
               ),
               trailing: _buildIcon(currentUID),
               title: Text(_ingredient.name),
