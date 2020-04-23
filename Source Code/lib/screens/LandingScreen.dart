@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/MainDrawer.dart';
+import 'package:odysseusrecipes/screens/IngredientsList.dart';
+import 'package:odysseusrecipes/screens/DishesList.dart';
 
 class LandingScreen extends StatelessWidget {
   @override
@@ -7,7 +9,6 @@ class LandingScreen extends StatelessWidget {
     /* IMPORTANT: Wrap the landing screen in a MaterialApp widget
       Because we want the navigator to be nested underneath the "Root" state
       otherwise child widgets will not find the state.
-      
       The Landing Screen begins at the bottom of the navigator stack.
     */
     return MaterialApp(home: Scaffold (
@@ -43,12 +44,12 @@ class LandingScreen extends StatelessWidget {
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children:  <Widget>[
         Row(
           children: <Widget>[
             Expanded(
-              child: Image.asset('images/image1.jpg'),
+              child: Image.network('https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2Flanding.jpg?alt=media&token=6bc75697-d49a-4dd5-b70d-63a1b8241e5a'),
             ),
           ],
         ),
@@ -67,7 +68,7 @@ class MainScreen extends StatelessWidget {
                   'Categories',
                   style: TextStyle(
                     fontFamily: 'Caveat',
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     color: Colors.black,
                   ),
                 ),
@@ -93,13 +94,13 @@ class MainScreen extends StatelessWidget {
                     'Ingredients',
                     style: TextStyle(
                         fontFamily: 'Caveat',
-                        fontSize: 40.0,
+                        fontSize: 20.0,
                         color: Colors.black,
                     ),
                   ),
                 ),
                 onPressed: (){
-                  print('Ingrediets pressed');
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => IngredientsList()));
                 },
               ),
           ),
@@ -119,13 +120,13 @@ class MainScreen extends StatelessWidget {
                   'Dishes',
                   style: TextStyle(
                     fontFamily: 'Caveat',
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     color: Colors.black,
                   ),
                 ),
               ),
               onPressed: (){
-                print('Dishes pressed');
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList()));
               },
             ),
           ),
@@ -145,7 +146,7 @@ class MainScreen extends StatelessWidget {
                   'Favorites',
                   style: TextStyle(
                     fontFamily: 'Caveat',
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     color: Colors.black,
                   ),
                 ),

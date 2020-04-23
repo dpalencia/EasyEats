@@ -1,11 +1,7 @@
 import 'package:odysseusrecipes/screens/Root.dart';
-
-import '../main.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Ingredient.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 
 
@@ -134,7 +130,7 @@ class IngredientTileState extends State<IngredientTile> {
      return Padding(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage("https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2Fpotatoes.jpg?alt=media&token=5180b9e5-4ab6-4e15-bc20-075e70a8bde6")
+                backgroundImage: NetworkImage(_ingredient.imageURL)
               ),
               trailing: _buildIcon(currentUID),
               title: Text(_ingredient.name),
