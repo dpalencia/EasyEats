@@ -215,7 +215,8 @@ class LoginScreenState extends State<LoginScreen> {
       // Use the setData api call to create a Database table for the user.
       // Then initialize their data fields.
       Firestore.instance.collection("user").document(user.uid.toString()).setData( {
-          "userIngredients": List<Map>()
+          "shoppingList": List<Map>(),
+          "myKitchen": List<Map>()
         }
       );
 
