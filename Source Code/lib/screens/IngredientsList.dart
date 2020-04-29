@@ -56,6 +56,7 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   }
 
   void addToList(Widget thisTile, String listName) {
+    if(!widgetLists[listName].contains(thisTile))
     setState(() {
       widgetLists[listName].add(thisTile);
     });
@@ -136,7 +137,7 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   Widget _buildIngredientTile(Ingredient ingredient) {
     RootState rootState = InheritRootState.of(context);
     String uid = rootState.getUser().uid;
-    return IngredientTile(ingredient, addToList, removeFromList, uid, key: UniqueKey()); 
+    return IngredientTile(ingredient, addToList, removeFromList, uid, key: Key(ingredient.getName())); 
   }
   @override
   Widget build(BuildContext context) {

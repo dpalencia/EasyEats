@@ -75,9 +75,7 @@ class IngredientTileState extends State<IngredientTile> {
     Firestore.instance.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
 
     // Statefully update Shopping List button
-    setState( () {
-    _isInShoppingCart = false;
-    });
+    setShoppingBool();
     _removeFromList(this.widget, "shopping");
   }
 
@@ -87,10 +85,7 @@ class IngredientTileState extends State<IngredientTile> {
     if(!ingredients.contains(_ingredient.name))
       ingredients.add(_ingredient.name);
     Firestore.instance.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
-    
-    setState( () {
-    _isInShoppingCart = true;
-    });
+    setShoppingBool();
     _addToList(this.widget, "shopping");
   }
 
@@ -100,9 +95,7 @@ class IngredientTileState extends State<IngredientTile> {
     if(!ingredients.contains(_ingredient.name))
       ingredients.add(_ingredient.name);
     Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
-    setState( () {
-      _isInKitchen = true;
-    });
+    setKitchenBool();
     _addToList(this.widget, "myKitchen");
   }
 
@@ -112,9 +105,7 @@ class IngredientTileState extends State<IngredientTile> {
     if(ingredients.contains(_ingredient.name))
       ingredients.remove(_ingredient.name);
     Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
-    setState( () {
-      _isInKitchen = false;
-    });
+    setKitchenBool();
     _removeFromList(this.widget, "myKitchen");
   }
 
@@ -141,7 +132,7 @@ class IngredientTileState extends State<IngredientTile> {
 
 
   void setKitchenBool() async {
-    // Same as setShoppingButtonState(), except for the MyKitcchen list.
+    // Same as setShoppingButtonState(), except for the MyKitchen list.
     Map<String, dynamic> theUserData = await getUserData(_userID);
     List<dynamic> myKitchen = theUserData["myKitchen"];
     if(this.mounted) {

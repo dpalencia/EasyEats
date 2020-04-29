@@ -6,8 +6,10 @@
 //rather than hard coding
 
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
+import 'package:odysseusrecipes/classes/Dish.dart';
 import '../main.dart';
 
 //I have this for testing purposes
@@ -16,23 +18,45 @@ import '../main.dart';
       home: Home(),
     ));*/
 
-class DishesList extends StatelessWidget {
+class DishesList extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Dishes List"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[dishCard(context)],
-      ),
-    );
-  }
+  createState() => DishesListState();
 }
 
-Widget dishCard(BuildContext context) {
+class DishesListState extends State<DishesList> {
+  // The big list of dishes
+  List<Dish> dishObjects;
+  
+  @override 
+  void initState() {
+    super.initState();
+    setDishObjects();
+  }
+  
+  void buildDishList(List<DocumentSnapshot> docSnaps) {
+    setState(() {
+      dishObjects = docSnaps.map((snap) => Dish.fromSnapshot(snap)).toList();
+    });
+  }
+  void setDishObjects() {
+    Firestore.instance.collection("dishes").getDocuments().then((snapshot) {
+      buildDishList(snapshot.documents);
+    });
+  }
+
+  // The main listview. Builds the widgets as they come in, based on predicates
+  Widget theBuilderWidget() {
+    return ListView.builder(
+      itemCount: dishObjects.length,
+      itemBuilder: theBuilderFunction
+    );
+  }
+
+  Widget theBuilderFunction(BuildContext context, int index) {
+    return dishCard(index);
+  }
+
+  Widget dishCard(int index) {
   return Center(
     child: Container(
       height: 300,
@@ -44,8 +68,24 @@ Widget dishCard(BuildContext context) {
           }, //TODO: Update onTap function to not be hardcoded
           child: Column(
             children: <Widget>[
-              dishCardImage,
-              dishCardText,
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Image.network(dishObjects[index].imageURL),
+                // demo, replace with get image from database for example (have to pass in values).
+              ),
+              Container(
+                width: 300,
+                height: 50,
+                child: Text(
+                  dishObjects[index].name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -56,42 +96,22 @@ Widget dishCard(BuildContext context) {
   );
 }
 
-var dishCardImage = FittedBox(
-  fit: BoxFit.contain,
-  child: Image.network(
-      'https://firebasestorage.googleapis.com/v0/b/odysseus-recipes.appspot.com/o/Images%2FwheatBread.jpg?alt=media&token=7eba1572-81b5-4d13-ab52-6e6dbdd10c3b'),
-  // demo, replace with get image from database for example (have to pass in values).
-);
-var dishCardText = Container(
-  width: 300,
-  height: 50,
-  child: Text(
-    "Wheat Bread",
-    //TODO: Currently Hard Coded, need to pass in value.
-    textAlign: TextAlign.center,
-    style: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      fontFamily: 'Roboto',
-    ),
-  ),
-);
+
+
+@override
+Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Dishes List"),
+      ),
+      body: (dishObjects == null) ? CircularProgressIndicator() : theBuilderWidget()
+      );
+  }
+}
+
+
 void onTap(BuildContext context) {
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => SingleDish()));
 }
 //TODO: Currently hard coded to go to Chris's page
-
-class Dish {
-  final String name;
-  final List categories;
-  //final DocumentReference reference;
-  final String imageURL;
-
-  Dish(name, description, categories, reference, url)
-      : name = name,
-        //reference = reference,
-        categories = categories,
-        imageURL = url;
-  //TODO: All the database stuff. This is all currently unused
-}
