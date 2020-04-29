@@ -71,8 +71,8 @@ class IngredientTileState extends State<IngredientTile> {
   void removeShoppingIngredient(String user) async {
     List<dynamic> ingredients = await getListFromDatabase("shoppingList");
 
-    if(ingredients.contains(_ingredient.name)) {
-      ingredients.remove(_ingredient.name);
+    if(ingredients.contains(_ingredient.reference.documentID)) {
+      ingredients.remove(_ingredient.reference.documentID);
     }
     // Update ingredient in database
     Firestore.instance.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
@@ -85,8 +85,8 @@ class IngredientTileState extends State<IngredientTile> {
   /* Set an ingredient in shopping list and update state of this tile and parent state widget. */
   void setShoppingIngredient(String user) async {
     List<dynamic> ingredients = await getListFromDatabase("shoppingList");
-    if(!ingredients.contains(_ingredient.name))
-      ingredients.add(_ingredient.name);
+    if(!ingredients.contains(_ingredient.reference.documentID))
+      ingredients.add(_ingredient.reference.documentID);
     Firestore.instance.collection("user").document(user).updateData( {"shoppingList" : ingredients} );
     setShoppingBool();
     _addToList(this.widget, "shopping");
@@ -95,8 +95,8 @@ class IngredientTileState extends State<IngredientTile> {
   /* Set an ingredient in kitchen in the database and update state of this tile and parent state widget. */
   void setKitchenIngredient(String user) async {
     List<dynamic> ingredients = await getListFromDatabase("myKitchen");
-    if(!ingredients.contains(_ingredient.name))
-      ingredients.add(_ingredient.name);
+    if(!ingredients.contains(_ingredient.reference.documentID))
+      ingredients.add(_ingredient.reference.documentID);
     Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
     setKitchenBool();
     _addToList(this.widget, "myKitchen");
@@ -105,8 +105,8 @@ class IngredientTileState extends State<IngredientTile> {
   /* Remove an ingredient from kitchen in the database and update state of this tile and the parent state widget. */
   void removeKitchenIngredient(String user) async {
     List<dynamic> ingredients = await getListFromDatabase("myKitchen");
-    if(ingredients.contains(_ingredient.name))
-      ingredients.remove(_ingredient.name);
+    if(ingredients.contains(_ingredient.reference.documentID))
+      ingredients.remove(_ingredient.reference.documentID);
     Firestore.instance.collection("user").document(user).updateData( {"myKitchen" : ingredients} );
     setKitchenBool();
     _removeFromList(this.widget, "myKitchen");
@@ -121,7 +121,7 @@ class IngredientTileState extends State<IngredientTile> {
     Map<String, dynamic> theUserData = await getUserData(_userID);
     List<dynamic> shoppingList = theUserData["shoppingList"];
     if(this.mounted) {
-      if(shoppingList.contains(_ingredient.name)) {
+      if(shoppingList.contains(_ingredient.reference.documentID)) {
           setState(() {
               _isInShoppingCart = true;
           });
@@ -139,7 +139,7 @@ class IngredientTileState extends State<IngredientTile> {
     Map<String, dynamic> theUserData = await getUserData(_userID);
     List<dynamic> myKitchen = theUserData["myKitchen"];
     if(this.mounted) {
-      if(myKitchen.contains(_ingredient.name)) {
+      if(myKitchen.contains(_ingredient.reference.documentID)) {
           setState(() {
               _isInKitchen = true;
           });

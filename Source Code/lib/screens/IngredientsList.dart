@@ -78,7 +78,7 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
         Firestore.instance.collection('ingredients').getDocuments().then((snapshot) =>
               setState( () {
                 widgetLists["shopping"] = _buildList(snapshot.documents)
-                .where((ingredient) => userShoppingList.contains(ingredient.getName())).toSet();
+                .where((ingredient) => userShoppingList.contains(ingredient.reference.documentID)).toSet();
                 //widgetLists["shopping"] = _buildIngredientWidgets(shoppingList);
             })
         );
@@ -103,7 +103,7 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
       Firestore.instance.collection('ingredients').getDocuments().then((snapshot) {
           setState( () {
            widgetLists["myKitchen"] = _buildList(snapshot.documents)
-            .where((ingredient) => userMyKitchen.contains(ingredient.getName())).toSet();
+            .where((ingredient) => userMyKitchen.contains(ingredient.reference.documentID)).toSet();
             //widgetLists["myKitchen"] = _buildIngredientWidgets(myKitchen);
           });
         }
