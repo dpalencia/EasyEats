@@ -12,6 +12,11 @@ class Ingredient {
     return name;
   }
 
+  @override 
+  bool operator == (other) {
+    return this.getName() == other.getName();
+  }
+
   // Defining named constructors from initializer list.
   Ingredient(name, description, categories, reference, url): 
     name = name, description = description, 
