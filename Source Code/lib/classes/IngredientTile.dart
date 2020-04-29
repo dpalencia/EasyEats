@@ -13,6 +13,8 @@ class IngredientTile extends StatefulWidget {
   this._removeFromList, this._userID, {Key key}): super(key: key); // Pass the data down to its state.
   final String _userID;
 
+  getIngredient() { return _ingredient; }
+
   @override 
   createState() => IngredientTileState(_ingredient, _addToList, _removeFromList, _userID);  // Create state.
 }
@@ -30,6 +32,7 @@ class IngredientTileState extends State<IngredientTile> {
     setKitchenBool();
     setShoppingBool();
   }
+
 
   Widget _buildIcon(String userID) {
     if((_isInKitchen == null) || (_isInShoppingCart == null)) 

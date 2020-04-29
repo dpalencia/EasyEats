@@ -21,24 +21,24 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   ];
   TabController _tabController;
 
-  List<String> filters;
-  List<String> userShoppingList;
-  List<String> userMyKitchen;
   
-  List<Ingredient> browseList;
-  List<Ingredient> shoppingList;
-  List<Ingredient> myKitchen;
-
+/*
+  Set<Ingredient> browseList;
+  Set<Ingredient> shoppingList;
+  Set<Ingredient> myKitchen;
+*/
 /*
   List<Widget> browseWidgets;
   List<Widget> shoppingWidgets;
   List<Widget> myKitchenWidgets;
 */
-  Map<String, List<Widget>> widgetLists = {
-    "browse": List<Widget>(),
-    "shopping": List<Widget>(),
-    "myKitchen": List<Widget>()
+
+  Map<String, Set<Ingredient>> widgetLists = {
+    "browse": Set<Ingredient>(),
+    "shopping": Set<Ingredient>(),
+    "myKitchen": Set<Ingredient>()
   };
+
 
   @override 
   void initState() {
@@ -55,29 +55,31 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
     super.dispose();
   }
 
-  void addToList(Widget thisTile, String listName) {
-    if(!widgetLists[listName].contains(thisTile))
-    setState(() {
-      widgetLists[listName].add(thisTile);
-    });
+  void addToList(IngredientTile thisTile, String listName) {
+    if(!widgetLists[listName].contains(thisTile.getIngredient())) {
+      setState(() {
+        widgetLists[listName].add(thisTile.getIngredient());
+      });
+    }
   }
   
-  void removeFromList(Widget thisTile, String listName) {
+  void removeFromList(IngredientTile thisTile, String listName) {
     setState(() {
-      widgetLists[listName].remove(thisTile);
+      widgetLists[listName].remove(thisTile.getIngredient());
     });
   }
+
 
   void setShoppingList() async {
       String uid = getTheUserID(context);
       Map<String, dynamic> userData = await getUserData(uid);
-      userShoppingList = userData["shoppingList"].cast<String>().toList();
+      var userShoppingList = userData["shoppingList"].cast<String>().toSet();
       if(mounted) {
         Firestore.instance.collection('ingredients').getDocuments().then((snapshot) =>
               setState( () {
-                shoppingList = _buildList(snapshot.documents)
-                .where((ingredient) => userShoppingList.contains(ingredient.getName())).toList();
-                widgetLists["shopping"] = _buildIngredientWidgets(shoppingList);
+                widgetLists["shopping"] = _buildList(snapshot.documents)
+                .where((ingredient) => userShoppingList.contains(ingredient.getName())).toSet();
+                //widgetLists["shopping"] = _buildIngredientWidgets(shoppingList);
             })
         );
       }
@@ -86,8 +88,8 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   void setBrowseList() async {
       Firestore.instance.collection('ingredients').getDocuments().then((snapshot) {
           setState( () {
-            browseList = _buildList(snapshot.documents);
-            widgetLists["browse"] = _buildIngredientWidgets(browseList);
+            widgetLists["browse"] = _buildList(snapshot.documents);
+            //widgetLists["browse"] = _buildIngredientWidgets(browseList);
           });
         }
       );
@@ -97,17 +99,32 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
   void setMyKitchen() async {
       String uid = getTheUserID(context);
       Map<String, dynamic> userData = await getUserData(uid);
-      userMyKitchen = userData["myKitchen"].cast<String>().toList();
+      var userMyKitchen = userData["myKitchen"].cast<String>().toSet();
       Firestore.instance.collection('ingredients').getDocuments().then((snapshot) {
           setState( () {
-            myKitchen = _buildList(snapshot.documents)
-            .where((ingredient) => userMyKitchen.contains(ingredient.getName())).toList();
-            widgetLists["myKitchen"] = _buildIngredientWidgets(myKitchen);
+           widgetLists["myKitchen"] = _buildList(snapshot.documents)
+            .where((ingredient) => userMyKitchen.contains(ingredient.getName())).toSet();
+            //widgetLists["myKitchen"] = _buildIngredientWidgets(myKitchen);
           });
         }
       );
   }
 
+
+  Widget _buildTheListView(String listID)  {
+    if(widgetLists[listID] == null) {
+      return CircularProgressIndicator();
+    }
+
+    return ListView.builder(
+      itemCount: widgetLists[listID].length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildIngredientTile(widgetLists[listID].elementAt(index));
+      }
+    );
+  }
+
+/*
   Widget _buildTheListView(List<Widget> ingredientWidgetList) {
     if(ingredientWidgetList != null) 
       return ListView(
@@ -117,18 +134,19 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
     else 
       return CircularProgressIndicator();
   }
-
-  List<Ingredient> _buildList(List<DocumentSnapshot> snapshot) {
-    return snapshot.map((snap) => _buildIngredient(snap)).toList();
+*/
+  Set<Ingredient> _buildList(List<DocumentSnapshot> snapshot) {
+    return snapshot.map((snap) => _buildIngredient(snap)).toSet();
   }
-  
-  List<Widget> _buildIngredientWidgets(List<Ingredient> ingredientList) {
-    return ingredientList.map((ingredient) => _buildIngredientTile(ingredient)).toList();
+  /*
+  List<Widget> _buildIngredientWidgets(Set<Ingredient> ingredientList) {
+    return ingredientList.map((ingredient) => _buildIngredientTile(ingredient)).toSet();
   }
-
+*/
   Ingredient _buildIngredient(DocumentSnapshot snap) {
     return Ingredient.fromSnapshot(snap);
   }
+
   // Render the individual ingredient items.
   // These are:
   // ingredient.name
@@ -139,6 +157,7 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
     String uid = rootState.getUser().uid;
     return IngredientTile(ingredient, addToList, removeFromList, uid, key: Key(ingredient.getName())); 
   }
+
   @override
   Widget build(BuildContext context) {
     // Statefully render either a single ingredient
@@ -155,9 +174,9 @@ class IngredientsListState extends State<IngredientsList> with SingleTickerProvi
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            _buildTheListView(widgetLists["browse"]),
-            _buildTheListView(widgetLists["shopping"]),
-            _buildTheListView(widgetLists["myKitchen"])
+            _buildTheListView("browse"),
+            _buildTheListView("shopping"),
+            _buildTheListView("myKitchen")
           ],
         )
     );
