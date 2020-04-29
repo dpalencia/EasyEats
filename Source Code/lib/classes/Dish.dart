@@ -11,18 +11,19 @@ class Dish {
   final difficultyLevel;
   final imageURL;
   final name; 
+  final ref;
 
   // The constructor which initializes the fields.
-  Dish(this.categories, this.cookTime,
+  Dish(this.ref, this.categories, this.cookTime,
   this.prepTime, this.rating, this.description,
   this.difficultyLevel, this.imageURL, this.name);
 
   //The named constructor that takes the map, and unpacks it into the fields.
-  Dish.fromMap(Map<String, dynamic> theData): this(theData["categories"], 
+  Dish.fromMap(Map<String, dynamic> theData, DocumentReference ref): this(ref, theData["categories"], 
   theData["cookTime"], theData["prepTime"], theData["rating"], theData["description"],
     theData["difficultyLevel"], theData["imageURL"], theData["name"]);
 
   // The named constructor that takes a snapshot and gets the Map with the data.
-  Dish.fromSnapshot(DocumentSnapshot snapshot): this.fromMap(snapshot.data);
+  Dish.fromSnapshot(DocumentSnapshot snapshot): this.fromMap(snapshot.data, snapshot.reference);
 
 }
