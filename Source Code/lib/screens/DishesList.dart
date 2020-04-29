@@ -14,9 +14,9 @@ import '../main.dart';
 
 //I have this for testing purposes
 //change class name back to DishesList and remove main function.
-/* main() => runApp(MaterialApp(
-      home: Home(),
-    ));*/
+//  main() => runApp(MaterialApp(
+//       home: DishesList(),
+//     ));
 
 class DishesList extends StatefulWidget {
   @override
@@ -60,39 +60,36 @@ class DishesListState extends State<DishesList> {
   return Center(
     child: Container(
       height: 300,
-      child: Card(
-        child: InkWell(
+        child: Card(
+          child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             onTap(context);
           }, //TODO: Update onTap function to not be hardcoded
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               FittedBox(
                 fit: BoxFit.contain,
                 child: Image.network(dishObjects[index].imageURL),
-                // demo, replace with get image from database for example (have to pass in values).
               ),
-              Container(
-                width: 300,
-                height: 50,
-                child: Text(
-                  dishObjects[index].name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Roboto',
-                  ),
-                ),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(), //filler container
+                  textContainer(dishObjects[index].name), 
+                  starContainer/*(pass in something for on tap )*/,
             ],
           ),
-        ),
-        elevation: 100,
-        margin: EdgeInsets.all(10),
+          ],
+        ), 
       ),
+      elevation: 100,
+      margin: EdgeInsets.all(10),
     ),
+  ),
   );
 }
 
@@ -114,4 +111,35 @@ void onTap(BuildContext context) {
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => SingleDish()));
 }
-//TODO: Currently hard coded to go to Chris's page
+Widget textContainer(dynamic name) {
+            return Container(
+                          // width: 150.0,
+                          height: 50.0,
+                          //color: Colors.orange[400],
+                          alignment:Alignment.center,
+                          child: Text(
+                            name,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                          ),
+                          ),
+                        );
+}
+var starContainer = Container(
+                    // width:40,
+                    height:50,
+                    //color: Colors.blue[100],
+                    alignment: Alignment.center,
+                    child: InkWell(
+                      splashColor: Colors.blue.withAlpha(30),
+                      onTap: () {
+                            //TODO: add dish to favorites
+                          },
+                      child: Icon(
+                        Icons.star
+                      ),
+                ),
+              );
