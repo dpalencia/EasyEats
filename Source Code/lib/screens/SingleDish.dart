@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
-
+import 'package:odysseusrecipes/classes/FieldIngredientStream.dart';
 class SingleDish extends StatefulWidget {
   // The constructor will take the _dish argument and build the state with it.
   final Dish _dish;
@@ -10,9 +10,10 @@ class SingleDish extends StatefulWidget {
 }
 
 class SingleDishState extends State<SingleDish> {
-
   // Stateful fields.
   bool _isInFavorites;
+
+  // The ingredient list model, which we use to build the tiles.
 
   @override initState() {
     super.initState();
@@ -44,6 +45,7 @@ class SingleDishState extends State<SingleDish> {
               children: <Widget>[
                 dishTitle(),
                 ingredients(),
+                FieldIngredientStream(widget._dish.ref, "ingredients")
               ],
             )
           ],
