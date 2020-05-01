@@ -133,7 +133,6 @@ class IngredientTileState extends State<IngredientTile> {
     }
 }
 
-
   void setKitchenBool() async {
     // Same as setShoppingButtonState(), except for the MyKitchen list.
     Map<String, dynamic> theUserData = await getUserData(_userID);

@@ -64,7 +64,7 @@ class DishesListState extends State<DishesList> {
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            onTap(context);
+            onTap(context, dishObjects[index]);
           }, //TODO: Update onTap function to not be hardcoded
           child: Column(
             children: <Widget>[
@@ -110,8 +110,8 @@ Widget build(BuildContext context) {
 }
 
 
-void onTap(BuildContext context) {
+void onTap(BuildContext context, Dish dish) {
   Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => SingleDish()));
+      .push(MaterialPageRoute(builder: (context) => SingleDish(dish)));
 }
 //TODO: Currently hard coded to go to Chris's page

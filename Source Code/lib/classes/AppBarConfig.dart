@@ -16,29 +16,14 @@ class AppBarConfig extends StatelessWidget with PreferredSizeWidget {
                 Navigator.of(context).pop();
               }
             ),
-            actions: <Widget>[
-              userIcon,
-              settingsIcon,
-            ]
           ),
-            
-            /*
-            leading: new IconButton(
-                icon: backIcon,
-                onPressed: () {
-                  print("Icon Pressed");
-                  Navigator.of(context).pop();
-                }
-              ),*/ //change onPressed go to previous screen
     );
   }
-
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 /*                       APPBAR CODE                                      */
-
 var backIcon = Container(
   child: IconButton(
     icon: Icon(
@@ -51,6 +36,8 @@ var backIcon = Container(
   ),
 );
 
+
+/*
 var userIcon = Container(
   child: IconButton(
     icon: Icon(
@@ -74,5 +61,5 @@ var settingsIcon = Container(
     },
   ),
 );
-
+*/
 /*                    END APPBAR CODE                                      */

@@ -4,8 +4,13 @@ import 'package:odysseusrecipes/screens/LoginScreen.dart';
 import 'LandingScreen.dart';
 
 class InheritRootState extends InheritedWidget {
+  // Daniel:
   // This widget will pass down the state of the root widget.
   // https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html
+
+  // This inherited widget serves as a wrapper for our main "Root" state.
+  // Its purpose is to make it easy to climb back up the widget tree from anywhere in the app,
+  // And access our user and their associated data, which is an app-wide state.
   final RootState state;
 
   InheritRootState({
@@ -31,7 +36,6 @@ class InheritRootState extends InheritedWidget {
 
 class Root extends StatefulWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   State<StatefulWidget> createState() => RootState();
 
   FirebaseAuth getAuth() {
@@ -40,9 +44,10 @@ class Root extends StatefulWidget {
 }
 
 class RootState extends State<Root> {
-
+  // User data fields; app user model
   FirebaseUser _user;
 
+  // Build by wrapping the state in the inherited widget.
   @override build(BuildContext context) {
     return InheritRootState(
       state: this,
@@ -50,6 +55,7 @@ class RootState extends State<Root> {
     );
   }
 
+  // Conditionally show login or landing if a user is logged in or out.
   Widget initialScreen() {
     if(_user == null) {
       return LoginScreen(widget._auth);
@@ -85,8 +91,6 @@ class RootState extends State<Root> {
   void awaitUser() async {
     _user = await widget._auth.currentUser();
   } 
-
-
 
   void logoutCallBack() {
     widget._auth.signOut();
