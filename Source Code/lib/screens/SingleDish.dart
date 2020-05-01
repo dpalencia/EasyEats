@@ -44,7 +44,7 @@ class SingleDishState extends State<SingleDish> {
             Column(
               children: <Widget>[
                 dishTitle(),
-                ingredients(),
+                Text(widget._dish.description),
                 FieldIngredientStream(widget._dish.ref, "ingredients")
               ],
             )
@@ -67,10 +67,6 @@ class SingleDishState extends State<SingleDish> {
         fontFamily: 'Roboto'
       )
     );
-  }
-
-  Widget ingredients() {
-    return Text("Hello, world...");
   }
 
   Widget prepIcon() {
