@@ -13,7 +13,7 @@ class FieldStepsStream extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
         // The outer build returns the ListView.
-        return  ListView(
+        return ListView(
             children: snapshot.data[_fieldName].asMap().entries.map<Widget>((item) => 
             Padding(
               padding: EdgeInsets.all(16.0),

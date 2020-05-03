@@ -93,29 +93,23 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
   }
 
   Widget prepIcon() {
-    return Container(
-      child: Column(
-        children: <Widget>[Icon(Icons.restaurant), Text('Prep Time:\n' + widget._dish.prepTime.toString() + ' minutes')],
-      ),
+    return ListTile(
+      leading: Icon(Icons.restaurant),
+      title: Text("Prep:\n" + widget._dish.prepTime.toString() + ' minutes')
     );
   }
 
   Widget cookIcon() { 
-    return Container( 
-      child: Column(
-        children: <Widget>[Icon(Icons.timer), Text('Cook Time:\n' + widget._dish.cookTime.toString() + ' minutes')],
-      ),
+    return ListTile(
+      leading: Icon(Icons.timer),
+      title: Text("Cook:\n" + widget._dish.cookTime.toString() + ' minutes')
     );
   }
 
   Widget diffIcon() {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Icon(Icons.accessibility),
-          Text('Difficulty Level:\n' + widget._dish.difficultyLevel.toString())
-        ],
-      )
+    return ListTile(
+      leading: Icon(Icons.accessibility),
+      title: Text("Difficulty:\n" + widget._dish.difficultyLevel.toString())
     );
   }
 
