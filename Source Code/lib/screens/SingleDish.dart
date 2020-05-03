@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
 import 'package:odysseusrecipes/classes/FieldIngredientStream.dart';
+import 'package:odysseusrecipes/classes/FieldStepsStream.dart';
 class SingleDish extends StatefulWidget {
   // The constructor will take the _dish argument and build the state with it.
   final Dish _dish;
@@ -11,7 +12,7 @@ class SingleDish extends StatefulWidget {
 
 class SingleDishState extends State<SingleDish> {
   // Stateful fields.
-  bool _isInFavorites;
+  bool _isOpen = true;
 
   // The ingredient list model, which we use to build the tiles.
 
@@ -21,13 +22,12 @@ class SingleDishState extends State<SingleDish> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         floatingActionButton: heartButton(),
         appBar: AppBar(
           title: Text(widget._dish.name)
         ),
-        body: Column(
+        body: ListView (
           children: <Widget>[
             FittedBox(
               child: Image.network(widget._dish.imageURL),
@@ -41,17 +41,27 @@ class SingleDishState extends State<SingleDish> {
                 diffIcon(),
               ],
             ),
-            Column(
-              children: <Widget>[
-                dishTitle(),
-                Text(widget._dish.description),
-                FieldIngredientStream(widget._dish.ref, "ingredients")
-              ],
+            ExpansionPanelList(
+              children: <ExpansionPanel>[
+                ExpansionPanel(
+                  body: FieldStepsStream(widget._dish.ref, "steps"),
+                  headerBuilder: (context, _isOpen) {
+                    return Text("Steps");
+                  },
+                  isExpanded: true
+                ),
+                ExpansionPanel(
+                  headerBuilder: (context, _isOpen) {
+                    return Text("Ingredients");
+                  },
+                  body: FieldIngredientStream(widget._dish.ref, "ingredients", withAmounts: true),
+                  isExpanded: true
+                )
+              ]
             )
           ],
         ),
-      ),
-    );
+      );
   }
     
     
@@ -67,6 +77,10 @@ class SingleDishState extends State<SingleDish> {
         fontFamily: 'Roboto'
       )
     );
+  }
+
+  Widget ingredients() {
+    return Text("Hello, world...");
   }
 
   Widget prepIcon() {

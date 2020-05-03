@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'Ingredient.dart';
+//TODO: This widget doesn't look like it needs to be stateful.
 
 class StreamIngredientTile extends StatefulWidget {
-  StreamIngredientTile(this._ingredient);
+  StreamIngredientTile(this._ingredient, {this.amount});
   final Ingredient _ingredient;
+  final String amount;
   @override
   createState() => StreamIngredientState();
 }
@@ -55,6 +57,7 @@ class StreamIngredientState extends State<StreamIngredientTile> {
               ),
               trailing: buildIcon(context),
               title: Text(widget._ingredient.name),
+              subtitle: widget.amount != null ? Text(widget.amount) : null
             ), 
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)
      ); 
