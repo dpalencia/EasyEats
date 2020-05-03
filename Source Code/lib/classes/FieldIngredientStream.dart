@@ -17,7 +17,6 @@ class FieldIngredientStream extends StatelessWidget {
         if(snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
         // The outer build returns the ListView.
         return SizedBox(
-
           child: ListView.builder(
           shrinkWrap: true,
           // Now watch the specified data field

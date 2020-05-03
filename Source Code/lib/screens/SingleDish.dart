@@ -10,57 +10,66 @@ class SingleDish extends StatefulWidget {
   createState() => SingleDishState();
 }
 
-class SingleDishState extends State<SingleDish> {
+class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMixin {
   // Stateful fields.
-  bool _isOpen = true;
+  final List<Tab> _theTabs = <Tab> [
+      Tab(text: "Instructions"),
+      Tab(text: "Ingredients"),
+    ];
+  TabController _controller;
 
   // The ingredient list model, which we use to build the tiles.
 
   @override initState() {
     super.initState();
+    _controller = TabController(vsync: this, length: _theTabs.length);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: heartButton(),
         appBar: AppBar(
           title: Text(widget._dish.name)
         ),
-        body: ListView (
-          children: <Widget>[
-            FittedBox(
-              child: Image.network(widget._dish.imageURL),
-                fit: BoxFit.fill, // demo, replace with what user clicked on.
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                prepIcon(),
-                cookIcon(),
-                diffIcon(),
-              ],
-            ),
-            ExpansionPanelList(
-              children: <ExpansionPanel>[
-                ExpansionPanel(
-                  body: FieldStepsStream(widget._dish.ref, "steps"),
-                  headerBuilder: (context, _isOpen) {
-                    return Text("Steps");
-                  },
-                  isExpanded: true
+        body: Container(
+          height: MediaQuery.of(context).copyWith().size.height,
+          child: Column(children: <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Expanded(
+                flex: 5,
+                child: FittedBox(
+                  child:  Image.network(widget._dish.imageURL),
+                  fit: BoxFit.cover
                 ),
-                ExpansionPanel(
-                  headerBuilder: (context, _isOpen) {
-                    return Text("Ingredients");
-                  },
-                  body: FieldIngredientStream(widget._dish.ref, "ingredients", withAmounts: true),
-                  isExpanded: true
+              ),
+              Expanded(
+                flex: 5,
+                child: Column(
+                  children: <Widget>[
+                    prepIcon(),
+                    cookIcon(),
+                    diffIcon()
+                  ],
                 )
-              ]
-            )
+              )
+            ],
+          ),
+          TabBar(
+            controller: _controller,
+            tabs: _theTabs
+          ),
+          Expanded(
+            child: TabBarView(
+            controller: _controller,
+            children: <Widget>[
+              FieldStepsStream(widget._dish.ref, "steps"),
+              FieldIngredientStream(widget._dish.ref, "ingredients", withAmounts: true)
+            ],
+          ))
           ],
-        ),
+        )),
       );
   }
     

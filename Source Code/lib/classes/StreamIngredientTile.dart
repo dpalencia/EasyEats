@@ -50,7 +50,7 @@ class StreamIngredientState extends State<StreamIngredientTile> {
 
   @override
   build(BuildContext context) {
-     return Padding(
+     return SingleChildScrollView(
             child: ListTile(
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(widget._ingredient.imageURL)

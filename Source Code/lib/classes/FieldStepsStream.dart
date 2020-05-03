@@ -13,21 +13,22 @@ class FieldStepsStream extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
         // The outer build returns the ListView.
-        return SizedBox(
-          height: 800,
-          child: ListView(
-          children: snapshot.data[_fieldName].asMap().entries.map<Widget>((item) => 
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Container(
-              width: double.infinity,
-              child: Text(
-            ((item.key + 1).toString() + ": " + item.value),
-            textAlign: TextAlign.left
-            )))).toList()
-        ));
+        return  ListView(
+            children: snapshot.data[_fieldName].asMap().entries.map<Widget>((item) => 
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                ((item.key + 1).toString() + ": " + item.value),
+                textAlign: TextAlign.left
+                )
+              )
+            )
+          ).toList()
+        );
       }
-   );
-      }  
+    );
+ }  
 }
 
