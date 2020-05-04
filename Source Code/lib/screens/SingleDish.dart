@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
 import 'package:odysseusrecipes/classes/FieldIngredientStream.dart';
+import 'package:odysseusrecipes/classes/FieldStepsStream.dart';
 class SingleDish extends StatefulWidget {
   // The constructor will take the _dish argument and build the state with it.
   final Dish _dish;
@@ -9,49 +10,67 @@ class SingleDish extends StatefulWidget {
   createState() => SingleDishState();
 }
 
-class SingleDishState extends State<SingleDish> {
+class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMixin {
   // Stateful fields.
-  bool _isInFavorites;
+  final List<Tab> _theTabs = <Tab> [
+      Tab(text: "Instructions"),
+      Tab(text: "Ingredients"),
+    ];
+  TabController _controller;
 
   // The ingredient list model, which we use to build the tiles.
 
   @override initState() {
     super.initState();
+    _controller = TabController(vsync: this, length: _theTabs.length);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButton: heartButton(),
+    return Scaffold(
         appBar: AppBar(
           title: Text(widget._dish.name)
         ),
-        body: Column(
-          children: <Widget>[
-            FittedBox(
-              child: Image.network(widget._dish.imageURL),
-                fit: BoxFit.fill, // demo, replace with what user clicked on.
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                prepIcon(),
-                cookIcon(),
-                diffIcon(),
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                dishTitle(),
-                ingredients(),
-                FieldIngredientStream(widget._dish.ref, "ingredients")
-              ],
-            )
+        body: Container(
+          height: MediaQuery.of(context).copyWith().size.height,
+          child: Column(children: <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Expanded(
+                flex: 5,
+                child: FittedBox(
+                  child:  Image.network(widget._dish.imageURL),
+                  fit: BoxFit.cover
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: Column(
+                  children: <Widget>[
+                    prepIcon(),
+                    cookIcon(),
+                    diffIcon()
+                  ],
+                )
+              )
+            ],
+          ),
+          TabBar(
+            controller: _controller,
+            tabs: _theTabs
+          ),
+          Expanded(
+            child: TabBarView(
+            controller: _controller,
+            children: <Widget>[
+              FieldStepsStream(widget._dish.ref, "steps"),
+              FieldIngredientStream(widget._dish.ref, "ingredients", withAmounts: true)
+            ],
+          ))
           ],
-        ),
-      ),
-    );
+        )),
+      );
   }
     
     
@@ -74,29 +93,23 @@ class SingleDishState extends State<SingleDish> {
   }
 
   Widget prepIcon() {
-    return Container(
-      child: Column(
-        children: <Widget>[Icon(Icons.restaurant), Text('Prep Time:\n' + widget._dish.prepTime.toString() + ' minutes')],
-      ),
+    return ListTile(
+      leading: Icon(Icons.restaurant),
+      title: Text("Prep:\n" + widget._dish.prepTime.toString() + ' minutes')
     );
   }
 
   Widget cookIcon() { 
-    return Container( 
-      child: Column(
-        children: <Widget>[Icon(Icons.timer), Text('Cook Time:\n' + widget._dish.cookTime.toString() + ' minutes')],
-      ),
+    return ListTile(
+      leading: Icon(Icons.timer),
+      title: Text("Cook:\n" + widget._dish.cookTime.toString() + ' minutes')
     );
   }
 
   Widget diffIcon() {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Icon(Icons.accessibility),
-          Text('Difficulty Level:\n' + widget._dish.difficultyLevel.toString())
-        ],
-      )
+    return ListTile(
+      leading: Icon(Icons.accessibility),
+      title: Text("Difficulty:\n" + widget._dish.difficultyLevel.toString())
     );
   }
 
