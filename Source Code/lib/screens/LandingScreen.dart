@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/MainDrawer.dart';
+import 'package:odysseusrecipes/classes/Theme.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/DishesList.dart';
 
@@ -11,9 +12,11 @@ class LandingScreen extends StatelessWidget {
       otherwise child widgets will not find the state.
       The Landing Screen begins at the bottom of the navigator stack.
     */
-    return MaterialApp(home: Scaffold (
+    return MaterialApp(
+      theme: darkTheme(),
+      home: Scaffold (
         appBar: AppBar(
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'Recipe App',
             style: TextStyle(
@@ -35,7 +38,7 @@ class LandingScreen extends StatelessWidget {
         ),
         drawer: MainDrawer(),
         body: MainScreen(),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Theme.of(context).backgroundColor,
     )
   );  
   }
@@ -56,20 +59,20 @@ class MainScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            color: Colors.amber[500],
+            color: Theme.of(context).accentColor,
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
                   Icons.add_circle_outline,
                   size: 40.0,
-                  color: Colors.red,
+                  color: Theme.of(context).primaryColor,
                 ),
                 title: Text(
                   'Categories',
                   style: TextStyle(
                     fontFamily: 'Caveat',
                     fontSize: 20.0,
-                    color: Colors.black,
+                    color: Theme.of(context).backgroundColor,
                   ),
                 ),
               ),
@@ -82,20 +85,20 @@ class MainScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-              color: Colors.amber[500],
+              color: Theme.of(context).accentColor,
               child: FlatButton(
                 child: ListTile(
                   leading: Icon(
                     Icons.add_circle_outline,
                     size: 40.0,
-                    color: Colors.red,
+                    color: Theme.of(context).primaryColor,
                   ),
                   title: Text(
                     'Ingredients',
                     style: TextStyle(
                         fontFamily: 'Caveat',
                         fontSize: 20.0,
-                        color: Colors.black,
+                        color: Theme.of(context).backgroundColor,
                     ),
                   ),
                 ),
@@ -114,14 +117,13 @@ class MainScreen extends StatelessWidget {
                 leading: Icon(
                   Icons.add_circle_outline,
                   size: 40.0,
-                  color: Colors.red,
+                  color: Theme.of(context).primaryColor,
                 ),
                 title: Text(
                   'Dishes',
                   style: TextStyle(
                     fontFamily: 'Caveat',
                     fontSize: 20.0,
-                    color: Colors.black,
                   ),
                 ),
               ),
@@ -140,14 +142,14 @@ class MainScreen extends StatelessWidget {
                 leading: Icon(
                   Icons.add_circle_outline,
                   size: 40.0,
-                  color: Colors.red,
+                  color: Theme.of(context).primaryColor,
                 ),
                 title: Text(
                   'Favorites',
                   style: TextStyle(
                     fontFamily: 'Caveat',
                     fontSize: 20.0,
-                    color: Colors.black,
+                    color: Theme.of(context).backgroundColor,
                   ),
                 ),
               ),
@@ -258,7 +260,7 @@ class MainSearch extends SearchDelegate<String> {
               TextSpan(
                 text: suggestionList[index].substring(query.length),
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Theme.of(context).textTheme.body1.color,
                 ),
               ),
             ]
