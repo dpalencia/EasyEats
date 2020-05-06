@@ -213,7 +213,8 @@ class LoginScreenState extends State<LoginScreen> {
       // Then initialize their data fields.
       Firestore.instance.collection("user").document(user.uid.toString()).setData( {
           "shoppingList": List<Map>(),
-          "myKitchen": List<Map>()
+          "myKitchen": List<Map>(),
+          "favoriteRecipes": List<Map>()
         }
       );
 
