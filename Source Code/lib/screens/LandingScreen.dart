@@ -17,12 +17,12 @@ class LandingScreen extends StatelessWidget {
       home: Scaffold (
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            'Recipe App',
-            style: TextStyle(
-              fontFamily: 'Pacifico',
-              fontSize: 30.0,
-            ),
+          title: FittedBox(
+            fit: BoxFit.contain,
+            child: Image.asset(
+              "assets/eewhite.png",
+              height: 100
+             ),
           ),
           actions: <Widget>[
             IconButton(
@@ -63,7 +63,7 @@ class MainScreen extends StatelessWidget {
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
-                  Icons.add_circle_outline,
+                  Icons.restaurant_menu,
                   size: 40.0,
                   color: Theme.of(context).primaryColor,
                 ),
@@ -89,7 +89,7 @@ class MainScreen extends StatelessWidget {
               child: FlatButton(
                 child: ListTile(
                   leading: Icon(
-                    Icons.add_circle_outline,
+                    Icons.kitchen,
                     size: 40.0,
                     color: Theme.of(context).primaryColor,
                   ),
@@ -111,19 +111,20 @@ class MainScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            color: Colors.amber[500],
+            color: Theme.of(context).accentColor,
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
-                  Icons.add_circle_outline,
+                  Icons.restaurant,
                   size: 40.0,
                   color: Theme.of(context).primaryColor,
                 ),
                 title: Text(
-                  'Dishes',
+                  'Recipes',
                   style: TextStyle(
                     fontFamily: 'Caveat',
                     fontSize: 20.0,
+                    color: Theme.of(context).backgroundColor
                   ),
                 ),
               ),
@@ -136,11 +137,11 @@ class MainScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            color: Colors.amber[500],
+            color: Theme.of(context).accentColor,
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
-                  Icons.add_circle_outline,
+                  Icons.favorite,
                   size: 40.0,
                   color: Theme.of(context).primaryColor,
                 ),

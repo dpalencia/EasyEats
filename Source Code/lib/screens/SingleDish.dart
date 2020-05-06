@@ -32,33 +32,39 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
           title: Text(widget._dish.name)
         ),
         body: Container(
-          height: MediaQuery.of(context).copyWith().size.height,
+          height: MediaQuery.of(context).copyWith().size.height, // <-- gets the screen height
           child: Column(children: <Widget>[
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                flex: 5,
-                child: FittedBox(
-                  child:  Image.network(widget._dish.imageURL),
-                  fit: BoxFit.cover
-                ),
-              ),
-              Expanded(
-                flex: 5,
-                child: Column(
-                  children: <Widget>[
-                    prepIcon(),
-                    cookIcon(),
-                    diffIcon()
-                  ],
-                )
-              )
-            ],
+          IntrinsicHeight( 
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    flex: 5,
+                    child: FittedBox(
+                      child:  Image.network(widget._dish.imageURL),
+                      fit: BoxFit.fitHeight
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      children: <Widget>[
+                        listIcon(Icons.restaurant, widget._dish.prepTime.toString() + " minutes", "Prep"),
+                        listIcon(Icons.timer, widget._dish.cookTime.toString() + " minutes", "Cook"),
+                        listIcon(Icons.accessibility, widget._dish.difficultyLevel.toString(), "Difficulty")
+                      ],
+                    )
+                  )
+                ],
+            )
           ),
-          TabBar(
+          Container (
+            color: Theme.of(context).primaryColor,
+            child: TabBar(
             controller: _controller,
-            tabs: _theTabs
+            tabs: _theTabs,
+            )
           ),
           Expanded(
             child: TabBarView(
@@ -92,24 +98,13 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
     return Text("Hello, world...");
   }
 
-  Widget prepIcon() {
+  Widget listIcon(IconData icon, String title, String subTitle) {
     return ListTile(
-      leading: Icon(Icons.restaurant),
-      title: Text("Prep:\n" + widget._dish.prepTime.toString() + ' minutes')
-    );
-  }
-
-  Widget cookIcon() { 
-    return ListTile(
-      leading: Icon(Icons.timer),
-      title: Text("Cook:\n" + widget._dish.cookTime.toString() + ' minutes')
-    );
-  }
-
-  Widget diffIcon() {
-    return ListTile(
-      leading: Icon(Icons.accessibility),
-      title: Text("Difficulty:\n" + widget._dish.difficultyLevel.toString())
+      leading: Icon(
+        icon
+        ),
+      title: Text(title),
+      subtitle: Text(subTitle)
     );
   }
 
