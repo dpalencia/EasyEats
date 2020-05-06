@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
+import 'package:odysseusrecipes/classes/FavoriteButton.dart';
 import 'package:odysseusrecipes/classes/FieldIngredientStream.dart';
 import 'package:odysseusrecipes/classes/FieldStepsStream.dart';
+import 'package:odysseusrecipes/functions/accountHelpers.dart';
 class SingleDish extends StatefulWidget {
   // The constructor will take the _dish argument and build the state with it.
   final Dish _dish;
@@ -18,17 +21,19 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
     ];
   TabController _controller;
 
-  // The ingredient list model, which we use to build the tiles.
-
   @override initState() {
     super.initState();
     _controller = TabController(vsync: this, length: _theTabs.length);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: <Widget>[
+            // Use a stream builder to get live icon data.
+            FavoriteButton(widget._dish)
+          ],
           title: Text(widget._dish.name)
         ),
         body: Container(
