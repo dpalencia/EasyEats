@@ -29,11 +29,13 @@ class FieldIngredientStream extends StatelessWidget {
                   // Here we're getting the individual document snapshots for the individual ingredients.
                   if(ingredient.connectionState == ConnectionState.waiting) return Column();
                   if(withAmounts) return StreamIngredientTile(Ingredient.fromSnapshot(ingredient.data), amount: snapshot.data["ingredientAmounts"][index]);
-                  return StreamIngredientTile(Ingredient.fromSnapshot(ingredient.data));
+                  return StreamIngredientTile(Ingredient.fromSnapshot(ingredient.data)
+                  );
                 }
               );
             }
-            ));
+            )
+            );
           }
         );
       }  
