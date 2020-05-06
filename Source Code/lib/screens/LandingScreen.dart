@@ -63,7 +63,7 @@ class MainScreen extends StatelessWidget {
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
-                  Icons.add_circle_outline,
+                  Icons.restaurant_menu,
                   size: 40.0,
                   color: Theme.of(context).primaryColor,
                 ),
@@ -89,7 +89,7 @@ class MainScreen extends StatelessWidget {
               child: FlatButton(
                 child: ListTile(
                   leading: Icon(
-                    Icons.add_circle_outline,
+                    Icons.kitchen,
                     size: 40.0,
                     color: Theme.of(context).primaryColor,
                   ),
@@ -115,12 +115,12 @@ class MainScreen extends StatelessWidget {
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
-                  Icons.add_circle_outline,
+                  Icons.restaurant,
                   size: 40.0,
                   color: Theme.of(context).primaryColor,
                 ),
                 title: Text(
-                  'Dishes',
+                  'Recipes',
                   style: TextStyle(
                     fontFamily: 'Caveat',
                     fontSize: 20.0,
@@ -141,7 +141,7 @@ class MainScreen extends StatelessWidget {
             child: FlatButton(
               child: ListTile(
                 leading: Icon(
-                  Icons.add_circle_outline,
+                  Icons.favorite,
                   size: 40.0,
                   color: Theme.of(context).primaryColor,
                 ),

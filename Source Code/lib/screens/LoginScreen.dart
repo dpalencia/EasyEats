@@ -26,9 +26,6 @@ class LoginScreenState extends State<LoginScreen> {
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: _register ? Text("Register") : Text("Login")
-      ),
       body:  Builder(
         builder: (BuildContext context) {
             return buildTheForm(context);
@@ -58,6 +55,7 @@ class LoginScreenState extends State<LoginScreen> {
         // form is preserved every time this widget is built.
         child: ListView(
           children: <Widget>[
+            Image.asset("assets/eewhite.png", height: 150),
             emailInput(),
             passwordInput(),
             registerButton(context),
@@ -77,7 +75,6 @@ class LoginScreenState extends State<LoginScreen> {
             elevation: 5.0,
             shape: RoundedRectangleBorder(
                 borderRadius:BorderRadius.circular(30.0)),
-            color: Colors.blue,
             child: Text(
                 "Register",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
@@ -119,6 +116,7 @@ class LoginScreenState extends State<LoginScreen> {
         key: _formKey,
         child: ListView(
           children: <Widget>[
+            Image.asset("assets/eewhite.png", height: 150),
             emailInput(),
             passwordInput(),
             loginButton(context),
@@ -132,7 +130,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   Widget emailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
       child: TextFormField(
         key: Key("emailInput"),
         maxLines: 1,
@@ -174,7 +172,6 @@ class LoginScreenState extends State<LoginScreen> {
             elevation: 5.0,
             shape: RoundedRectangleBorder(
                 borderRadius:BorderRadius.circular(30.0)),
-            color: Colors.blue, 
             child: Text(
                 "Log In",
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
