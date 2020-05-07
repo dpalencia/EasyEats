@@ -34,6 +34,7 @@ class IngredientNotifier extends StatelessWidget {
           stream: Firestore.instance.collection('dishes').document(_dish.ref.documentID).snapshots(),
           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> dishSnap) {
             if(dishSnap.connectionState == ConnectionState.waiting) return Text("Loading...");
+            if(userSnap.data["myKitchen"] == null || dishSnap.data["ingredients"] == null) return Text("Error retreiving data.");
             int missingCount = getMissingCount(userSnap.data["myKitchen"].toList(), dishSnap.data["ingredients"].toList());
             String displayText = (missingCount == 0)  ? "You have all the ingredients!"
                                   : "Ingredients missing: " + missingCount.toString();
