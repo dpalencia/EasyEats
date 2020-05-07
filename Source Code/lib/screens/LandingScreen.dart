@@ -129,7 +129,7 @@ class MainScreen extends StatelessWidget {
                 ),
               ),
               onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("dishes")));
               },
             ),
           ),
@@ -155,7 +155,8 @@ class MainScreen extends StatelessWidget {
                 ),
               ),
                 onPressed: (){
-                  print('favorites pressed');
+                  print('am i even fucking updating');
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("Favorites")));
                 },
             ),
           ),

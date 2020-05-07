@@ -5,11 +5,12 @@
 //TODO: Take in dishes from the database and use that info and images in functions
 //rather than hard coding
 
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
+import 'package:odysseusrecipes/functions/accountHelpers.dart';
+import 'package:odysseusrecipes/classes/FavoriteButton.dart';
 import '../main.dart';
 
 //I have this for testing purposes
@@ -19,18 +20,28 @@ import '../main.dart';
 //     ));
 
 class DishesList extends StatefulWidget {
-  @override
-  createState() => DishesListState();
+  String _type='';
+  DishesList();
+  DishesList.type(String type){
+    this._type=type;
+  }
+  createState() => (_type=='') ? DishesListState() : DishesListState.type(_type);
 }
+
 
 class DishesListState extends State<DishesList> {
   // The big list of dishes
+  String _type="dishes";
+  DishesListState();
+  DishesListState.type(String type){
+    this._type=type;
+  }
   List<Dish> dishObjects;
-  
   @override 
   void initState() {
     super.initState();
-    setDishObjects();
+    setDishObjects(_type);
+
   }
   
   void buildDishList(List<DocumentSnapshot> docSnaps) {
@@ -38,10 +49,20 @@ class DishesListState extends State<DishesList> {
       dishObjects = docSnaps.map((snap) => Dish.fromSnapshot(snap)).toList();
     });
   }
-  void setDishObjects() {
-    Firestore.instance.collection("dishes").getDocuments().then((snapshot) {
-      buildDishList(snapshot.documents);
-    });
+  void setDishObjects(String _type) {
+    if(_type=="Favorites"){
+    List<DocumentSnapshot> _favorites=List<DocumentSnapshot>();
+    Firestore.instance.collection("user").document(getTheUserID(context)).get().then((snapshot) async {
+      for(int i=0;i<snapshot.data["favoriteRecipes"].length;i++){
+        _favorites.add(await snapshot.data["favoriteRecipes"][i].get());//?????????
+      }
+      buildDishList(_favorites);
+      });
+    }
+    else{
+    Firestore.instance.collection(_type).getDocuments().then((snapshot) {
+      buildDishList(snapshot.documents);});
+    }
   }
 
   // The main listview. Builds the widgets as they come in, based on predicates
@@ -80,7 +101,7 @@ class DishesListState extends State<DishesList> {
                 children: <Widget>[
                   Container(), //filler container
                   textContainer(dishObjects[index].name), 
-                  starContainer/*(pass in something for on tap )*/,
+                  FavoriteButton(dishObjects[index]),
             ],
           ),
           ],
@@ -99,7 +120,7 @@ class DishesListState extends State<DishesList> {
 Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dishes List"),
+        title: (_type=="dishes") ? Text("Dishes List") : Text(_type),
       ),
       body: (dishObjects == null) ? CircularProgressIndicator() : theBuilderWidget()
       );
@@ -128,18 +149,3 @@ Widget textContainer(dynamic name) {
                           ),
                         );
 }
-var starContainer = Container(
-                    // width:40,
-                    height:50,
-                    //color: Colors.blue[100],
-                    alignment: Alignment.center,
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      onTap: () {
-                            //TODO: add dish to favorites
-                          },
-                      child: Icon(
-                        Icons.star
-                      ),
-                ),
-              );
