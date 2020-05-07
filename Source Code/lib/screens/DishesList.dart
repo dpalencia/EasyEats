@@ -7,6 +7,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:odysseusrecipes/classes/IngredientNotifier.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
@@ -88,11 +89,17 @@ class DishesListState extends State<DishesList> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    dish.name == null ? Text("") : textContainer(dish.name, context), 
-                    FavoriteButton(dish),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        dish.name == null ? Text("") : textContainer(dish.name, context), 
+                        IngredientNotifier(dish)
+                      ],
+                    ),
+                    FavoriteButton(dish)
               ],
               ),
-            )
+            ),
             ],
         ), 
       ),
@@ -122,10 +129,10 @@ void onTap(BuildContext context, Dish dish) {
 }
 Widget textContainer(dynamic name, BuildContext context) {
             return Container(
-                          alignment:Alignment.center,
                           child: Text(
                             name,
-                            style: Theme.of(context).textTheme.subhead
+                            style: Theme.of(context).textTheme.subhead,
+                            textAlign: TextAlign.left,
                           ),
                         );
 }
