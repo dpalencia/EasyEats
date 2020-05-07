@@ -7,16 +7,19 @@ class FavoriteButton extends StatelessWidget {
   // Build a tappable favorites icon based on live database data.
   // Tapping will add/remove the dish from the user favorites.
   final Dish _dish;
-  FavoriteButton(this._dish);
+  final Color color;
+  FavoriteButton(this._dish, {this.color});
   @override
   build(BuildContext context) {
     return StreamBuilder(
               stream: Firestore.instance.collection("user").document(getTheUserID(context)).snapshots(),
               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snap) {
+                if(snap.connectionState == ConnectionState.waiting) return Text("Loading...");
                 List<dynamic> userFavorites = snap.data["favoriteRecipes"].toList();
                 bool isInFavorites = snap.data["favoriteRecipes"].any((element) => element.path == _dish.ref.path);
                 return IconButton(
                   icon: Icon(isInFavorites ? Icons.star : Icons.star_border),
+                  color: color,
                   onPressed: () {
                     if(isInFavorites) removeFromFavorites(userFavorites, snap.data.reference, context);
                     else addToFavorites(userFavorites, snap.data.reference, context);

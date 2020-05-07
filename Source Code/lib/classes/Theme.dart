@@ -14,6 +14,12 @@ ThemeData darkTheme() {
       body1: TextStyle(
         color: Color(0xffffffff)
       )
+    ),
+    accentTextTheme: TextTheme(
+      display1: TextStyle(
+        color: Color(0xff8a0027),
+        fontSize: 25
+      )
     )
   );
 }

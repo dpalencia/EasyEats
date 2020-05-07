@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/MainDrawer.dart';
 import 'package:odysseusrecipes/classes/Theme.dart';
+import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/screens/IngredientsList.dart';
 import 'package:odysseusrecipes/screens/DishesList.dart';
+import 'package:odysseusrecipes/screens/Root.dart';
 
 class LandingScreen extends StatelessWidget {
   @override
@@ -36,7 +38,6 @@ class LandingScreen extends StatelessWidget {
             ),
           ],
         ),
-        drawer: MainDrawer(),
         body: MainScreen(),
         backgroundColor: Theme.of(context).backgroundColor,
     )
@@ -45,6 +46,32 @@ class LandingScreen extends StatelessWidget {
 }
 
 class MainScreen extends StatelessWidget {
+  Widget paddedButton(BuildContext context, IconData theIcon, String label, callback) {
+    return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+              color: Theme.of(context).accentColor,
+              child: FlatButton(
+                child: ListTile(
+                  leading: Icon(
+                    theIcon,
+                    size: 40.0,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text(
+                    label,
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).backgroundColor,
+                    ),
+                  ),
+                ),
+                onPressed: callback,
+              ),
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -56,111 +83,13 @@ class MainScreen extends StatelessWidget {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            color: Theme.of(context).accentColor,
-            child: FlatButton(
-              child: ListTile(
-                leading: Icon(
-                  Icons.restaurant_menu,
-                  size: 40.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-                title: Text(
-                  'Categories',
-                  style: TextStyle(
-                    fontFamily: 'Caveat',
-                    fontSize: 20.0,
-                    color: Theme.of(context).backgroundColor,
-                  ),
-                ),
-              ),
-              onPressed: (){
-                print('Categories pressed');
-              },
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-              color: Theme.of(context).accentColor,
-              child: FlatButton(
-                child: ListTile(
-                  leading: Icon(
-                    Icons.kitchen,
-                    size: 40.0,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text(
-                    'Ingredients',
-                    style: TextStyle(
-                        fontFamily: 'Caveat',
-                        fontSize: 20.0,
-                        color: Theme.of(context).backgroundColor,
-                    ),
-                  ),
-                ),
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => IngredientsList()));
-                },
-              ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            color: Theme.of(context).accentColor,
-            child: FlatButton(
-              child: ListTile(
-                leading: Icon(
-                  Icons.restaurant,
-                  size: 40.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-                title: Text(
-                  'Recipes',
-                  style: TextStyle(
-                    fontFamily: 'Caveat',
-                    fontSize: 20.0,
-                    color: Theme.of(context).backgroundColor
-                  ),
-                ),
-              ),
-              onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("dishes")));
-              },
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            color: Theme.of(context).accentColor,
-            child: FlatButton(
-              child: ListTile(
-                leading: Icon(
-                  Icons.favorite,
-                  size: 40.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-                title: Text(
-                  'Favorites',
-                  style: TextStyle(
-                    fontFamily: 'Caveat',
-                    fontSize: 20.0,
-                    color: Theme.of(context).backgroundColor,
-                  ),
-                ),
-              ),
-                onPressed: (){
-                  print('am i even fucking updating');
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("Favorites")));
-                },
-            ),
-          ),
-        ),
+        paddedButton(context, Icons.kitchen, "Ingredients", () { Navigator.of(context).push(MaterialPageRoute(builder: (context) => IngredientsList())); }),
+        paddedButton(context, Icons.restaurant, "Recipes", () { Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("dishes"))); }),
+        paddedButton(context, Icons.favorite, "Favorites", () { Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("Favorites"))); }),
+        paddedButton(context, Icons.exit_to_app, "Log Out", () {
+          Navigator.of(context).pop();
+          logOut(InheritRootState.of(context));
+        })
       ],
     );
   }
