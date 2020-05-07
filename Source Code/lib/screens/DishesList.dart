@@ -5,7 +5,6 @@
 //TODO: Take in dishes from the database and use that info and images in functions
 //rather than hard coding
 
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
