@@ -39,6 +39,7 @@ class StreamIngredientState extends State<StreamIngredientTile> {
           onTap: () { 
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(widget._ingredient.name  + " " + addRemove + " " + listName + "."),
+              duration: Duration(milliseconds: 750)
             ));
             listContainsIngredient ? removeFromList(snapshot, fieldName, userIngredientList) : addToList(snapshot, fieldName, userIngredientList); 
             },

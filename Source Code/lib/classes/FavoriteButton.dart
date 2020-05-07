@@ -31,7 +31,7 @@ class FavoriteButton extends StatelessWidget {
     userRef.updateData({"favoriteRecipes" : favList});
     Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(_dish.name + " added to favorites."),
+          content: Text(_dish.name + " removed from favorites."),
           duration: Duration(seconds: 1)
         )
     );
@@ -42,7 +42,7 @@ class FavoriteButton extends StatelessWidget {
     userRef.updateData({"favoriteRecipes" : favList});
     Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(_dish.name + " removed from favorites."),
+          content: Text(_dish.name + " added to favorites."),
           duration: Duration(seconds: 1)
         )
     );

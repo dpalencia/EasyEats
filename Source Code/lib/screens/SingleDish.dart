@@ -4,6 +4,7 @@ import 'package:odysseusrecipes/classes/Dish.dart';
 import 'package:odysseusrecipes/classes/FavoriteButton.dart';
 import 'package:odysseusrecipes/classes/FieldIngredientStream.dart';
 import 'package:odysseusrecipes/classes/FieldStepsStream.dart';
+import 'package:odysseusrecipes/classes/IngredientNotifier.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 class SingleDish extends StatefulWidget {
   // The constructor will take the _dish argument and build the state with it.
@@ -34,7 +35,14 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
             // Use a stream builder to get live icon data.
             FavoriteButton(widget._dish)
           ],
-          title: Text(widget._dish.name)
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:  [
+              Text(widget._dish.name),
+              IngredientNotifier(widget._dish)
+            ]
+          )
         ),
         body: Container(
           height: MediaQuery.of(context).copyWith().size.height, // <-- gets the screen height
@@ -77,8 +85,9 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
             children: <Widget>[
               FieldStepsStream(widget._dish.ref, "steps"),
               FieldIngredientStream(widget._dish.ref, "ingredients", withAmounts: true)
-            ],
-          ))
+              ]
+            )
+          )
           ],
         )),
       );
@@ -97,10 +106,6 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
         fontFamily: 'Roboto'
       )
     );
-  }
-
-  Widget ingredients() {
-    return Text("Hello, world...");
   }
 
   Widget listIcon(IconData icon, String title, String subTitle) {
