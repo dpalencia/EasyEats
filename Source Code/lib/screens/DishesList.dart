@@ -125,6 +125,7 @@ class DishesListState extends State<DishesList> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           AppBar(
+            actions: <Widget>[Container()],
             title: Text(
               "Filters",
               textAlign: TextAlign.center,
@@ -138,6 +139,7 @@ class DishesListState extends State<DishesList> {
           CheckboxListTile(
             title: const Text('Vegetarian'),
             value: vegetarianbool,
+            activeColor: Theme.of(context).primaryColor,
             onChanged: (bool value) {
               print(value.toString());
               if (!value) {
@@ -158,6 +160,7 @@ class DishesListState extends State<DishesList> {
           CheckboxListTile(
             title: const Text('Meat'),
             value: meatbool,
+            activeColor: Theme.of(context).primaryColor,
             onChanged: (bool value2) {
               if (!value2) {
                 for (int i = 0; i < dishObjects.length; i++) {
@@ -178,6 +181,7 @@ class DishesListState extends State<DishesList> {
           CheckboxListTile(
             title: const Text('Baking'),
             value: bakingbool,
+            activeColor: Theme.of(context).primaryColor,
             onChanged: (bool value) {
               if (!value) {
                 for (int i = 0; i < dishObjects.length; i++) {
@@ -210,7 +214,7 @@ class DishesListState extends State<DishesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (_type == "dishes") ? Text("Dishes List") : Text(_type),
+        title: (_type == "dishes") ? Text("Recipes") : Text(_type),
       ),
       body: (dishObjects == null) ? Center(child: CircularProgressIndicator()) : theBuilderWidget(),
       endDrawer: filterDrawer()
