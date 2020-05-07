@@ -155,7 +155,6 @@ class MainScreen extends StatelessWidget {
                 ),
               ),
                 onPressed: (){
-                  print('am i even fucking updating');
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => DishesList.type("Favorites")));
                 },
             ),
