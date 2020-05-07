@@ -37,7 +37,7 @@ class IngredientNotifier extends StatelessWidget {
             int missingCount = getMissingCount(userSnap.data["myKitchen"].toList(), dishSnap.data["ingredients"].toList());
             String displayText = (missingCount == 0)  ? "You have all the ingredients!"
                                   : "Ingredients missing: " + missingCount.toString();
-            return Text(displayText, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.left,);
+            return Text(displayText, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.left);
           }
         );
       }
