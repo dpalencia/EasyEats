@@ -8,16 +8,11 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:odysseusrecipes/classes/IngredientNotifier.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
 import 'package:odysseusrecipes/functions/accountHelpers.dart';
 import 'package:odysseusrecipes/classes/FavoriteButton.dart';
-
-//I have this for testing purposes
-//change class name back to DishesList and remove main function.
-//  main() => runApp(MaterialApp(
-//       home: DishesList(),
-//     ));
 
 class DishesList extends StatefulWidget {
   String _type = '';
@@ -76,56 +71,53 @@ class DishesListState extends State<DishesList> {
 
   // The main listview. Builds the widgets as they come in, based on predicates
   Widget theBuilderWidget() {
-    return ListView.builder(
-        itemCount: dishObjects.length, itemBuilder: theBuilderFunction);
+    return ListView(
+        children: dishObjects.map((item) => dishCard(item)).toList()
+      );
   }
 
-  Widget theBuilderFunction(BuildContext context, int index) {
-    return dishCard(index);
-  }
 
-  Widget dishCard(int index) {
-    return Center(
-      child: Container(
-        height: 300,
+  Widget dishCard(Dish dish) {
+  return Center(
+    child: Container(
+        margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
         child: Card(
           child: InkWell(
-            splashColor: Colors.blue.withAlpha(30),
-            onTap: () {
-              onTap(context, dishObjects[index]);
-            }, //TODO: Update onTap function to not be hardcoded
+          onTap: () {
+            onTap(context, dish);
+          }, 
             child: Column(
-              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Expanded(
-                flex: 1,
-                  child:Container(
-                    height:200,
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Image.network(dishObjects[index].imageURL),
-                    ),
-                    ),
+                FittedBox(
+                  fit: BoxFit.cover,
+                  child: dish.imageURL == null ? null : Image.network((dish.imageURL))
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //mainAxisSize: MainAxisSize.max,
+                Container(
+                  padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+                  color: Theme.of(context).primaryColor,
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(), //filler container
-                    textContainer(dishObjects[index].name),
-                    FavoriteButton(dishObjects[index]),
-                  ],
-                ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        dish.name == null ? Text("") : textContainer(dish.name, context), 
+                        IngredientNotifier(dish)
+                      ],
+                    ),
+                    FavoriteButton(dish)
               ],
+              ),
             ),
-          ),
-          elevation: 100,
-          margin: EdgeInsets.all(10),
-        ),
+            ],
+        ), 
       ),
-    );
-  }
+
+    ),
+  ),
+  );
+}
 
   Widget filterDrawer() {
     return Drawer(
@@ -220,11 +212,9 @@ class DishesListState extends State<DishesList> {
       appBar: AppBar(
         title: (_type == "dishes") ? Text("Dishes List") : Text(_type),
       ),
-      endDrawer: filterDrawer(),
-      body: (dishObjects == null)
-          ? CircularProgressIndicator()
-          : theBuilderWidget(),
-    );
+      body: (dishObjects == null) ? Center(child: CircularProgressIndicator()) : theBuilderWidget(),
+      endDrawer: filterDrawer()
+      );
   }
 }
 
@@ -232,21 +222,12 @@ void onTap(BuildContext context, Dish dish) {
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => SingleDish(dish)));
 }
-
-Widget textContainer(dynamic name) {
-  return Container(
-    // width: 150.0,
-    height: 50.0,
-    //color: Colors.orange[400],
-    alignment: Alignment.center,
-    child: Text(
-      name,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Roboto',
-      ),
-    ),
-  );
+Widget textContainer(dynamic name, BuildContext context) {
+            return Container(
+                          child: Text(
+                            name,
+                            style: Theme.of(context).textTheme.subhead,
+                            textAlign: TextAlign.left,
+                          ),
+                        );
 }
