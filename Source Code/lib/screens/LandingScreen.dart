@@ -26,17 +26,6 @@ class LandingScreen extends StatelessWidget {
               height: 100
              ),
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.search,
-              ),
-              onPressed: (){
-                showSearch(context: context, delegate: MainSearch()
-                );
-              },
-            ),
-          ],
         ),
         body: MainScreen(),
         backgroundColor: Theme.of(context).backgroundColor,
@@ -205,30 +194,3 @@ class MainSearch extends SearchDelegate<String> {
 
 
 
-
-
-/*class Home extends StatelessWidget {
-
-  @override build(BuildContext context) { 
-    return MaterialApp (
-      home: Scaffold(
-        drawer: MainDrawer(), 
-        backgroundColor: Colors.amber[400],
-        appBar: AppBar( 
-          title: Text('Recipe App'),
-          backgroundColor: Colors.redAccent[700],
-        ),
-        body: Center(
-          child: Image(
-            //image: AssetImage('images/diamond.png'),
-            image: NetworkImage(
-                'https://eatforum.org/content/uploads/2018/05/table_with_food_top_view_900x700.jpg'
-              ),
-          ),
-        ),
-      )
-    );
-  }
-}
-
-*/
