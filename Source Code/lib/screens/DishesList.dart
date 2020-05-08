@@ -8,138 +8,230 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:odysseusrecipes/classes/IngredientNotifier.dart';
 import 'package:odysseusrecipes/screens/SingleDish.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
-import '../main.dart';
-
-//I have this for testing purposes
-//change class name back to DishesList and remove main function.
-//  main() => runApp(MaterialApp(
-//       home: DishesList(),
-//     ));
+import 'package:odysseusrecipes/functions/accountHelpers.dart';
+import 'package:odysseusrecipes/classes/FavoriteButton.dart';
 
 class DishesList extends StatefulWidget {
-  @override
-  createState() => DishesListState();
+  String _type = '';
+  DishesList();
+  DishesList.type(String type) {
+    this._type = type;
+  }
+  createState() =>
+      (_type == '') ? DishesListState() : DishesListState.type(_type);
 }
 
 class DishesListState extends State<DishesList> {
   // The big list of dishes
+  bool vegetarianbool = true;
+  bool meatbool = true;
+  bool bakingbool = true;
+  List<Dish> meat, vegetarian, baking;
+  String _type = "dishes";
+  DishesListState();
+  DishesListState.type(String type) {
+    this._type = type;
+  }
   List<Dish> dishObjects;
-  
-  @override 
+  @override
   void initState() {
     super.initState();
-    setDishObjects();
+    setDishObjects(_type);
   }
-  
+
   void buildDishList(List<DocumentSnapshot> docSnaps) {
     setState(() {
       dishObjects = docSnaps.map((snap) => Dish.fromSnapshot(snap)).toList();
+      makeCategoryLists();
     });
   }
-  void setDishObjects() {
-    Firestore.instance.collection("dishes").getDocuments().then((snapshot) {
-      buildDishList(snapshot.documents);
-    });
+
+  void setDishObjects(String _type) {
+    if (_type == "Favorites") {
+      List<DocumentSnapshot> _favorites = List<DocumentSnapshot>();
+      Firestore.instance
+          .collection("user")
+          .document(getTheUserID(context))
+          .get()
+          .then((snapshot) async {
+        for (int i = 0; i < snapshot.data["favoriteRecipes"].length; i++) {
+          _favorites.add(await snapshot.data["favoriteRecipes"][i].get());
+        }
+        buildDishList(_favorites);
+      });
+    } else {
+      Firestore.instance.collection(_type).getDocuments().then((snapshot) {
+        buildDishList(snapshot.documents);
+      });
+    }
   }
 
   // The main listview. Builds the widgets as they come in, based on predicates
   Widget theBuilderWidget() {
-    return ListView.builder(
-      itemCount: dishObjects.length,
-      itemBuilder: theBuilderFunction
-    );
+    return ListView(
+        children: dishObjects.map((item) => dishCard(item)).toList()
+      );
   }
 
-  Widget theBuilderFunction(BuildContext context, int index) {
-    return dishCard(index);
-  }
 
-  Widget dishCard(int index) {
+  Widget dishCard(Dish dish) {
   return Center(
     child: Container(
-      height: 300,
+        margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
         child: Card(
           child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            onTap(context, dishObjects[index]);
-          }, //TODO: Update onTap function to not be hardcoded
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              FittedBox(
-                fit: BoxFit.contain,
-                child: Image.network(dishObjects[index].imageURL),
+            onTap(context, dish);
+          }, 
+            child: Column(
+              children: <Widget>[
+                FittedBox(
+                  fit: BoxFit.cover,
+                  child: dish.imageURL == null ? null : Image.network((dish.imageURL))
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+                  color: Theme.of(context).primaryColor,
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        dish.name == null ? Text("") : textContainer(dish.name, context), 
+                        IngredientNotifier(dish)
+                      ],
+                    ),
+                    FavoriteButton(dish)
+              ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(), //filler container
-                  textContainer(dishObjects[index].name), 
-                  starContainer/*(pass in something for on tap )*/,
+            ),
             ],
-          ),
-          ],
         ), 
       ),
-      elevation: 100,
-      margin: EdgeInsets.all(10),
+
     ),
   ),
   );
 }
 
+  Widget filterDrawer() {
+    return Drawer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          AppBar(
+            actions: <Widget>[Container()],
+            title: Text(
+              "Filters",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto',
+              ),
+            ),
+          ),
+          CheckboxListTile(
+            title: const Text('Vegetarian'),
+            value: vegetarianbool,
+            activeColor: Theme.of(context).primaryColor,
+            onChanged: (bool value) {
+              print(value.toString());
+              if (!value) {
+                for (int i = 0; i < dishObjects.length; i++) {
+                  if (dishObjects[i].categories.contains("Vegetarian")) {
+                    dishObjects.removeAt(i);
+                    i--;
+                  }
+                }
+              } else if (value == true) {
+                dishObjects += vegetarian;
+              }
+              setState(() {
+                vegetarianbool = value;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Meat'),
+            value: meatbool,
+            activeColor: Theme.of(context).primaryColor,
+            onChanged: (bool value2) {
+              if (!value2) {
+                for (int i = 0; i < dishObjects.length; i++) {
+                  if (dishObjects[i].categories.contains("Meat")) {
+                    dishObjects.removeAt(i);
+                    i--;
+                  }
+                }
+              } else if (value2) {
+                dishObjects += meat;
+              }
+              print(value2);
+              setState(() {
+                meatbool = value2;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Baking'),
+            value: bakingbool,
+            activeColor: Theme.of(context).primaryColor,
+            onChanged: (bool value) {
+              if (!value) {
+                for (int i = 0; i < dishObjects.length; i++) {
+                  if (dishObjects[i].categories.contains("Baking")) {
+                    dishObjects.removeAt(i);
+                    i--;
+                  }
+                }
+              } else if (value) {
+                dishObjects += baking;
+              }
+              print(value);
+              setState(() {
+                bakingbool = value;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
+  void makeCategoryLists() {
+    vegetarian = dishObjects.where((e) => e.categories.contains("Vegetarian")).toList();
+    meat = dishObjects.where((e) => e.categories.contains("Meat")).toList();
+    baking = dishObjects.where((e) => e.categories.contains("Baking")).toList();
+  }
 
-@override
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dishes List"),
+        title: (_type == "dishes") ? Text("Recipes") : Text(_type),
       ),
-      body: (dishObjects == null) ? CircularProgressIndicator() : theBuilderWidget()
+      body: (dishObjects == null) ? Center(child: CircularProgressIndicator()) : theBuilderWidget(),
+      endDrawer: filterDrawer()
       );
   }
 }
-
 
 void onTap(BuildContext context, Dish dish) {
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => SingleDish(dish)));
 }
-Widget textContainer(dynamic name) {
+Widget textContainer(dynamic name, BuildContext context) {
             return Container(
-                          // width: 150.0,
-                          height: 50.0,
-                          //color: Colors.orange[400],
-                          alignment:Alignment.center,
                           child: Text(
                             name,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
-                          ),
+                            style: Theme.of(context).textTheme.subhead,
+                            textAlign: TextAlign.left,
                           ),
                         );
 }
-var starContainer = Container(
-                    // width:40,
-                    height:50,
-                    //color: Colors.blue[100],
-                    alignment: Alignment.center,
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      onTap: () {
-                            //TODO: add dish to favorites
-                          },
-                      child: Icon(
-                        Icons.star
-                      ),
-                ),
-              );

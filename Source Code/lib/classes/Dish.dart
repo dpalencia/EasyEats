@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Dish {
   // Take a DocumentSnapshot and unpack it into these fields.
-  final categories;
+  List categories = new List();
   final cookTime;
   final prepTime;
   //final rating; We can return to the rating idea if we have time.
@@ -11,7 +11,8 @@ class Dish {
   final difficultyLevel;
   final imageURL;
   final name; 
-  final ref;
+  final dynamic ref;
+
 
   // The constructor which initializes the fields.
   Dish(this.ref, this.categories, this.cookTime,
@@ -25,5 +26,8 @@ class Dish {
 
   // The named constructor that takes a snapshot and gets the Map with the data.
   Dish.fromSnapshot(DocumentSnapshot snapshot): this.fromMap(snapshot.data, snapshot.reference);
+  
+  
+ 
 
 }

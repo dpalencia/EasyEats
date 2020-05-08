@@ -13,7 +13,7 @@ class AllIngredientStream extends StatelessWidget {
       stream: Firestore.instance.collection("ingredients").snapshots(),
       // Create a listview from all fo the documents in this collection.
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting) return CircularProgressIndicator();
+        if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator());
         return ListView.builder(
           itemCount: snapshot.data.documents.length,
           itemBuilder: (BuildContext context, int index) {

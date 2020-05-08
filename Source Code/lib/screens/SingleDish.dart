@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:odysseusrecipes/classes/Dish.dart';
+import 'package:odysseusrecipes/classes/FavoriteButton.dart';
 import 'package:odysseusrecipes/classes/FieldIngredientStream.dart';
 import 'package:odysseusrecipes/classes/FieldStepsStream.dart';
+import 'package:odysseusrecipes/classes/IngredientNotifier.dart';
+import 'package:odysseusrecipes/functions/accountHelpers.dart';
 class SingleDish extends StatefulWidget {
   // The constructor will take the _dish argument and build the state with it.
   final Dish _dish;
@@ -18,47 +22,62 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
     ];
   TabController _controller;
 
-  // The ingredient list model, which we use to build the tiles.
-
   @override initState() {
     super.initState();
     _controller = TabController(vsync: this, length: _theTabs.length);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget._dish.name)
+          actions: <Widget>[
+            // Use a stream builder to get live icon data.
+            FavoriteButton(widget._dish)
+          ],
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:  [
+              Text(widget._dish.name),
+              IngredientNotifier(widget._dish)
+            ]
+          )
         ),
         body: Container(
-          height: MediaQuery.of(context).copyWith().size.height,
+          height: MediaQuery.of(context).copyWith().size.height, // <-- gets the screen height
           child: Column(children: <Widget>[
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Expanded(
-                flex: 5,
-                child: FittedBox(
-                  child:  Image.network(widget._dish.imageURL),
-                  fit: BoxFit.cover
-                ),
-              ),
-              Expanded(
-                flex: 5,
-                child: Column(
-                  children: <Widget>[
-                    prepIcon(),
-                    cookIcon(),
-                    diffIcon()
-                  ],
-                )
-              )
-            ],
+          IntrinsicHeight( 
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    flex: 5,
+                    child: FittedBox(
+                      child:  Image.network(widget._dish.imageURL),
+                      fit: BoxFit.fitHeight
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      children: <Widget>[
+                        listIcon(Icons.restaurant, widget._dish.prepTime.toString() + " minutes", "Prep"),
+                        listIcon(Icons.timer, widget._dish.cookTime.toString() + " minutes", "Cook"),
+                        listIcon(Icons.accessibility, widget._dish.difficultyLevel.toString(), "Difficulty")
+                      ],
+                    )
+                  )
+                ],
+            )
           ),
-          TabBar(
+          Container (
+            color: Theme.of(context).primaryColor,
+            child: TabBar(
             controller: _controller,
-            tabs: _theTabs
+            tabs: _theTabs,
+            )
           ),
           Expanded(
             child: TabBarView(
@@ -66,8 +85,9 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
             children: <Widget>[
               FieldStepsStream(widget._dish.ref, "steps"),
               FieldIngredientStream(widget._dish.ref, "ingredients", withAmounts: true)
-            ],
-          ))
+              ]
+            )
+          )
           ],
         )),
       );
@@ -88,28 +108,13 @@ class SingleDishState extends State<SingleDish> with SingleTickerProviderStateMi
     );
   }
 
-  Widget ingredients() {
-    return Text("Hello, world...");
-  }
-
-  Widget prepIcon() {
+  Widget listIcon(IconData icon, String title, String subTitle) {
     return ListTile(
-      leading: Icon(Icons.restaurant),
-      title: Text("Prep:\n" + widget._dish.prepTime.toString() + ' minutes')
-    );
-  }
-
-  Widget cookIcon() { 
-    return ListTile(
-      leading: Icon(Icons.timer),
-      title: Text("Cook:\n" + widget._dish.cookTime.toString() + ' minutes')
-    );
-  }
-
-  Widget diffIcon() {
-    return ListTile(
-      leading: Icon(Icons.accessibility),
-      title: Text("Difficulty:\n" + widget._dish.difficultyLevel.toString())
+      leading: Icon(
+        icon
+        ),
+      title: Text(title),
+      subtitle: Text(subTitle)
     );
   }
 
